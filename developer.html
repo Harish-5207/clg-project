@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ad-Reg â€” Developer Master Control Panel</title>
+<title>Ad-Reg — Developer Master Control Panel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -40,6 +40,14 @@
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
         Admin Dashboard
       </a>
+      <a href="students.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Students Directory
+      </a>
+      <a href="attendance.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Attendance Marking
+      </a>
       <a href="student-dashboard.html" class="nav-item">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
         Student Portal
@@ -64,7 +72,7 @@
     <header class="content-header">
       <div>
         <h2>Developer Master Control Panel</h2>
-        <p class="welcome-line">Total system authority & gamer cyber matrix console</p>
+        <p class="welcome-line">Total system authority, testing suite & gamer cyber matrix console</p>
       </div>
       <div class="header-actions">
         <span class="status-badge active" style="font-size: 13px; padding: 6px 14px; background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; box-shadow: 0 0 14px rgba(168, 85, 247, 0.6);">GOD MODE ONLINE</span>
@@ -86,8 +94,8 @@
         <p class="stat-value" id="devStudentStatusText">ONLINE</p>
       </div>
       <div class="stat-card">
-        <p class="stat-label">System Accounts Managed</p>
-        <p class="stat-value" id="devTotalAccountsCount">12</p>
+        <p class="stat-label">Total System Pages</p>
+        <p class="stat-value" style="color: #06b6d4;">14 Modules</p>
       </div>
     </section>
 
@@ -95,46 +103,55 @@
     <section class="panel section-space">
       <div class="panel-title-row">
         <div>
-          <h3>Developer Portal View Switcher</h3>
-          <p class="section-sub">Instantly switch between Student, Faculty Admin, Super Admin Owner, and Directory views</p>
+          <h3>All System Portals & Direct Access Hub</h3>
+          <p class="section-sub">Instantly launch full screen or embed interactive live preview frame for any module</p>
         </div>
       </div>
 
       <!-- Quick Launch View Cards -->
       <div class="results-grid" style="margin-bottom: 20px;">
         <div class="result-card" style="border-left: 4px solid var(--blue-600);">
-          <p class="result-term">Student Portal View</p>
-          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Track attendance, leave requests & report cards</p>
-          <div style="display: flex; gap: 8px; margin-top: 6px;">
-            <a href="student-dashboard.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px;">Launch Full Screen â†—</a>
-            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('student-dashboard.html')">Embed Preview</button>
+          <p class="result-term">Student Portal Suite (5 Pages)</p>
+          <p class="result-marks" style="font-size: 13.5px; font-weight: 600; color: var(--ink-700);">Overview, Profile, Leaves, Results & Schedule</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+            <a href="student-dashboard.html" class="btn-primary-action" style="padding: 5px 10px; font-size: 11.5px;">Dashboard ↗</a>
+            <a href="student-profile.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Profile ↗</a>
+            <a href="student-leaves.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Leaves ↗</a>
+            <a href="student-reports.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Reports ↗</a>
+            <a href="student-schedule.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Schedule ↗</a>
+            <button class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px; background: rgba(37, 99, 235, 0.1);" onclick="loadDevIframe('student-dashboard.html')">Embed Preview</button>
           </div>
         </div>
 
         <div class="result-card" style="border-left: 4px solid #16a34a;">
-          <p class="result-term">Faculty Admin View</p>
-          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Faction selector, stats & weekly trend graphs</p>
-          <div style="display: flex; gap: 8px; margin-top: 6px;">
-            <a href="dashboard.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #16a34a;" target="_self">Launch Full Screen â†—</a>
-            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('dashboard.html')">Embed Preview</button>
+          <p class="result-term">Faculty Admin Portal (5 Pages)</p>
+          <p class="result-marks" style="font-size: 13.5px; font-weight: 600; color: var(--ink-700);">Faction selector, Directory, Marking, Reports & Calendar</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+            <a href="dashboard.html" class="btn-primary-action" style="padding: 5px 10px; font-size: 11.5px; background: #16a34a;">Dashboard ↗</a>
+            <a href="students.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Students ↗</a>
+            <a href="attendance.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Marking ↗</a>
+            <a href="reports.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Reports ↗</a>
+            <a href="calendar.html" class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px;">Calendar ↗</a>
+            <button class="btn-secondary" style="padding: 5px 10px; font-size: 11.5px; background: rgba(22, 163, 74, 0.1);" onclick="loadDevIframe('dashboard.html')">Embed Preview</button>
           </div>
         </div>
 
         <div class="result-card" style="border-left: 4px solid #7c3aed;">
-          <p class="result-term">Super Admin Owner View</p>
-          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Faculty approvals queue & owner authority</p>
-          <div style="display: flex; gap: 8px; margin-top: 6px;">
-            <a href="superadmin.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #7c3aed;" target="_self">Launch Full Screen â†—</a>
+          <p class="result-term">Super Admin Owner Portal</p>
+          <p class="result-marks" style="font-size: 13.5px; font-weight: 600; color: var(--ink-700);">Faculty approvals queue & owner authority</p>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <a href="superadmin.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #7c3aed;">Launch Full Screen ↗</a>
             <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('superadmin.html')">Embed Preview</button>
           </div>
         </div>
 
         <div class="result-card" style="border-left: 4px solid #0891b2;">
-          <p class="result-term">Students Directory View</p>
-          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Search, directory list & add student modal</p>
-          <div style="display: flex; gap: 8px; margin-top: 6px;">
-            <a href="students.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #0891b2;" target="_self">Launch Full Screen â†—</a>
-            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('students.html')">Embed Preview</button>
+          <p class="result-term">System Settings & Auth Gate</p>
+          <p class="result-marks" style="font-size: 13.5px; font-weight: 600; color: var(--ink-700);">Global preferences, audit logs & unified login portal</p>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <a href="settings.html" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">Settings ↗</a>
+            <a href="index.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #0891b2;">Login / Sign Up Gate ↗</a>
+            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('index.html')">Embed Preview</button>
           </div>
         </div>
       </div>
@@ -238,7 +255,7 @@
           <span class="activity-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
           <div>
             <p class="activity-text">Developer Master Control Panel Initialized</p>
-            <p class="activity-time">Just now â€” God Mode active</p>
+            <p class="activity-time">Just now — God Mode active</p>
           </div>
         </li>
       </ul>
@@ -259,11 +276,11 @@
       <div class="modal-body">
         <div class="modal-field">
           <label for="devUserName">User Name</label>
-          <input type="text" id="devUserName" required placeholder="â€”">
+          <input type="text" id="devUserName" required placeholder="—">
         </div>
         <div class="modal-field">
           <label for="devUserEmail">Email Address</label>
-          <input type="email" id="devUserEmail" required placeholder="â€”">
+          <input type="email" id="devUserEmail" required placeholder="—">
         </div>
         <div class="modal-field">
           <label for="devUserRole">System Role</label>

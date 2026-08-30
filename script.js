@@ -316,7 +316,7 @@ function addDevAuditLog(msg) {
     <span class="activity-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
     <div>
       <p class="activity-text">${msg}</p>
-      <p class="activity-time">${new Date().toLocaleTimeString()} â€” Developer Logged</p>
+      <p class="activity-time">${new Date().toLocaleTimeString()} — Developer Logged</p>
     </div>
   `;
   auditList.insertBefore(li, auditList.firstChild);
@@ -1960,7 +1960,7 @@ function renderSelectedDateEvents() {
     container.innerHTML = `
       <div class="result-card" style="border-left: 4px solid #16a34a;">
         <p class="result-term">Compensatory Lecture Session</p>
-        <p class="section-sub">B.Tech CS 2nd Year â€” Data Structures & Algorithms (09:00 AM - 11:00 AM)</p>
+        <p class="section-sub">B.Tech CS 2nd Year — Data Structures & Algorithms (09:00 AM - 11:00 AM)</p>
       </div>
     `;
   } else {
