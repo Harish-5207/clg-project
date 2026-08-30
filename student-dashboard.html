@@ -171,6 +171,34 @@
           </div>
         </div>
       </div>
+    <!-- Attendance Ranking System Board (Leaderboard) -->
+    <section class="panel section-space" id="attendanceLeaderboardSection">
+      <div class="panel-title-row" style="flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h3>Attendance Ranking System Board</h3>
+          <p class="section-sub">Live student ranking board based on verified attendance percentages</p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <select id="leaderboardFactionFilter" class="select-pill" onchange="renderAttendanceLeaderboard()" aria-label="Filter Leaderboard by Faction">
+            <option value="all" selected>All Factions & Departments</option>
+            <option value="higher_ed">Higher Education Faction</option>
+            <option value="junior_college">Junior College Faction</option>
+            <option value="school">School Faction</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="leaderboard-container">
+        <!-- Top 3 Podium -->
+        <div class="leaderboard-top-podium" id="leaderboardTopPodium">
+          <!-- Dynamically populated via script.js -->
+        </div>
+
+        <!-- Full Ranked Leaderboard List -->
+        <div class="leaderboard-list" id="leaderboardList">
+          <!-- Dynamically populated via script.js -->
+        </div>
+      </div>
     </section>
 
     <!-- Leave Application Section -->

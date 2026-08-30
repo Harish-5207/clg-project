@@ -1841,6 +1841,145 @@ function renderStudentDashboardLiveStats() {
 renderStudentDashboardLiveStats();
 
 /* ==========================================================
+   STUDENT ATTENDANCE RANKING SYSTEM BOARD (LEADERBOARD)
+   ========================================================== */
+
+function renderAttendanceLeaderboard() {
+  const podiumContainer = document.getElementById('leaderboardTopPodium');
+  const listContainer = document.getElementById('leaderboardList');
+  const factionSelect = document.getElementById('leaderboardFactionFilter');
+
+  if (!podiumContainer && !listContainer) return;
+
+  const currentFilter = factionSelect ? factionSelect.value : 'all';
+  const students = getStudentsList();
+
+  // Filter students
+  const filtered = students.filter(st => {
+    if (currentFilter === 'all') return true;
+    return st.factionGroup === currentFilter;
+  });
+
+  // Sort in descending order by numeric attendance percentage
+  filtered.sort((a, b) => {
+    const rateA = parseFloat(a.rate.replace('%', '')) || 0;
+    const rateB = parseFloat(b.rate.replace('%', '')) || 0;
+    return rateB - rateA;
+  });
+
+  if (filtered.length === 0) {
+    if (podiumContainer) podiumContainer.innerHTML = '';
+    if (listContainer) {
+      listContainer.innerHTML = `
+        <div style="text-align: center; padding: 36px 16px; color: var(--ink-500); background: rgba(255,255,255,0.7); border-radius: var(--radius-md); border: 1px dashed var(--border);">
+          <p style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">No rankings available in this category yet.</p>
+          <p style="font-size: 12.5px;">Leaderboard rankings calculate in real-time as faculty records attendance.</p>
+        </div>
+      `;
+    }
+    return;
+  }
+
+  // Top 3 Podium
+  const top1 = filtered[0];
+  const top2 = filtered.length > 1 ? filtered[1] : null;
+  const top3 = filtered.length > 2 ? filtered[2] : null;
+
+  if (podiumContainer) {
+    let podiumHtml = '';
+
+    // Rank 2 (Left)
+    if (top2) {
+      const init2 = top2.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      podiumHtml += `
+        <div class="podium-card rank-2">
+          <span class="podium-rank-badge">🥈 Rank #2</span>
+          <div class="podium-avatar">${init2}</div>
+          <div class="podium-name">${top2.name}</div>
+          <div class="podium-roll">${top2.roll} • ${top2.course.split('>')[0].trim()}</div>
+          <div class="podium-percent">${top2.rate}</div>
+          <div class="podium-classes">Attendance Record</div>
+        </div>
+      `;
+    } else {
+      podiumHtml += `<div class="podium-card rank-2" style="opacity: 0.5; display: flex; align-items: center; justify-content: center; min-height: 180px;"><p style="font-size: 12px; color: var(--ink-500);">Position Open</p></div>`;
+    }
+
+    // Rank 1 (Center - Featured)
+    if (top1) {
+      const init1 = top1.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      podiumHtml += `
+        <div class="podium-card rank-1">
+          <span class="podium-rank-badge">🥇 Rank #1</span>
+          <div class="podium-avatar">${init1}</div>
+          <div class="podium-name">${top1.name}</div>
+          <div class="podium-roll">${top1.roll} • ${top1.course.split('>')[0].trim()}</div>
+          <div class="podium-percent">${top1.rate}</div>
+          <div class="podium-classes" style="color: #92400e; font-weight: 700;">Highest Attendance</div>
+        </div>
+      `;
+    }
+
+    // Rank 3 (Right)
+    if (top3) {
+      const init3 = top3.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+      podiumHtml += `
+        <div class="podium-card rank-3">
+          <span class="podium-rank-badge">🥉 Rank #3</span>
+          <div class="podium-avatar">${init3}</div>
+          <div class="podium-name">${top3.name}</div>
+          <div class="podium-roll">${top3.roll} • ${top3.course.split('>')[0].trim()}</div>
+          <div class="podium-percent">${top3.rate}</div>
+          <div class="podium-classes">Attendance Record</div>
+        </div>
+      `;
+    } else {
+      podiumHtml += `<div class="podium-card rank-3" style="opacity: 0.5; display: flex; align-items: center; justify-content: center; min-height: 180px;"><p style="font-size: 12px; color: var(--ink-500);">Position Open</p></div>`;
+    }
+
+    podiumContainer.innerHTML = podiumHtml;
+  }
+
+  // Ranks 4+ List
+  if (listContainer) {
+    const remaining = filtered.slice(3);
+    if (remaining.length === 0) {
+      listContainer.innerHTML = '';
+    } else {
+      listContainer.innerHTML = remaining.map((st, idx) => {
+        const rankNum = idx + 4;
+        const initials = st.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        const percentVal = parseFloat(st.rate.replace('%', '')) || 0;
+
+        return `
+          <div class="leaderboard-row">
+            <div class="leaderboard-left">
+              <div class="rank-number-pill">#${rankNum}</div>
+              <div class="avatar-circle" style="width: 38px; height: 38px; font-size: 13px;">${initials}</div>
+              <div class="leaderboard-user-info">
+                <div class="leaderboard-user-name">${st.name}</div>
+                <div class="leaderboard-user-meta">${st.roll} • <span class="crumb-badge" style="font-size: 10.5px; padding: 2px 6px;">${st.course}</span></div>
+              </div>
+            </div>
+            <div class="leaderboard-right">
+              <div class="leaderboard-bar-wrap">
+                <div class="progress-bar" style="height: 7px;">
+                  <div class="progress-fill" style="width: ${percentVal}%;"></div>
+                </div>
+              </div>
+              <div class="leaderboard-rate-val">${st.rate}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  }
+}
+
+// Initial Leaderboard render
+renderAttendanceLeaderboard();
+
+/* ==========================================================
    INBUILT ACADEMIC CALENDAR INTERACTIVE ENGINE
    ========================================================== */
 
