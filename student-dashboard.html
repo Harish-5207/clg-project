@@ -76,7 +76,7 @@
       <span class="crumb-badge" id="studentCrumbBadge">—</span>
       <div class="today-pill" id="studentTodayPill">Today, 6 May 2024</div>
 
-      <div class="student-portal-header-badge" title="Student Portal — FYJC to Degree Level">
+      <a href="student-dashboard.html" class="student-portal-header-badge" title="Student Portal Dashboard" style="text-decoration: none; color: inherit;">
         <div style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
@@ -91,7 +91,7 @@
             FYJC to Degree Level
           </div>
         </div>
-      </div>
+      </a>
     </div>
   </header>
 
@@ -106,30 +106,33 @@
     </div>
   </div>
 
-    <!-- Attendance Stats Row -->
+    <!-- Attendance Stats Row (Interactive Shortcuts) -->
     <section class="stat-grid">
-      <div class="stat-card">
+      <a href="attendance.html" class="stat-card clickable-shortcut-card" title="Click to view detailed attendance logs">
         <p class="stat-label">Overall Attendance</p>
         <p class="stat-value stat-accent" id="studentOverallRate">0.0%</p>
-      </div>
-      <div class="stat-card">
+      </a>
+      <a href="attendance.html" class="stat-card clickable-shortcut-card" title="Click to view attended lecture records">
         <p class="stat-label">Classes Attended</p>
         <p class="stat-value" id="studentClassesCount">0 / 0</p>
-      </div>
-      <div class="stat-card">
+      </a>
+      <a href="student-leaves.html" class="stat-card clickable-shortcut-card" title="Click to apply for absence leave">
         <p class="stat-label">Absent Days</p>
         <p class="stat-value stat-danger" id="studentAbsentCount">0</p>
-      </div>
-      <div class="stat-card">
+      </a>
+      <a href="student-leaves.html" class="stat-card clickable-shortcut-card" title="Click to view leave application status">
         <p class="stat-label">Approved Leaves</p>
         <p class="stat-value" id="approvedLeavesCount">0</p>
-      </div>
+      </a>
     </section>
 
     <!-- Subject Wise Breakdown & Progress -->
     <section class="panel-grid">
       <div class="panel">
-        <h3>Subject-Wise Attendance Breakdown</h3>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h3 style="margin: 0;">Subject-Wise Attendance Breakdown</h3>
+          <a href="attendance.html" style="font-size: 12px; font-weight: 700; color: var(--blue-600); text-decoration: none;">View Detailed Records &rarr;</a>
+        </div>
         <div class="subject-progress-list" id="studentSubjectList">
           <div class="subject-item">
             <div class="subject-header">
@@ -165,9 +168,12 @@
         </div>
       </div>
 
-      <!-- Quick Actions / Academic Standing -->
-      <div class="panel">
-        <h3>Academic Standing</h3>
+      <!-- Quick Actions / Academic Standing (Interactive Shortcut) -->
+      <a href="student-reports.html" class="panel clickable-shortcut-card" style="display: block; text-decoration: none; color: inherit;" title="Click to view official academic reports and transcript">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h3 style="margin: 0;">Academic Standing</h3>
+          <span style="font-size: 12px; font-weight: 700; color: var(--blue-600);">View Reports &rarr;</span>
+        </div>
         <div class="academic-standing-card">
           <div class="gpa-ring">
             <span class="gpa-score" id="studentGpaScore">0.0</span>
@@ -178,7 +184,7 @@
             <p class="standing-note" id="studentStandingNote">Attendance progress is tracked in real-time by faculty admin.</p>
           </div>
         </div>
-      </div>
+      </a>
     <!-- Attendance Ranking System Board (Leaderboard) -->
     <section class="panel section-space" id="attendanceLeaderboardSection">
       <div class="panel-title-row" style="flex-wrap: wrap; gap: 12px;">

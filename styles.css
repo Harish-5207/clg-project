@@ -2864,6 +2864,28 @@ body.dev-gamer-theme {
   font-weight: 600;
 }
 
+/* ==========================================================
+   INTERACTIVE SHORTCUT CARDS & CROSS-PAGE ACTION LINKS
+   ========================================================== */
+
+.clickable-shortcut-card {
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  position: relative;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.clickable-shortcut-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.15), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(59, 130, 246, 0.8) !important;
+}
+
+.clickable-shortcut-card:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
 
 
 

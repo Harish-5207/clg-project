@@ -1825,6 +1825,14 @@ function updateStudentSidebarWidgets() {
   if (headerNameEl) {
     headerNameEl.textContent = profile.name || 'Student';
   }
+  // Update Today Pill with current real date
+  const todayPills = document.querySelectorAll('#studentTodayPill, .today-pill');
+  const todayDate = new Date();
+  const mNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const formattedToday = `${todayDate.getDate()} ${mNames[todayDate.getMonth()]} ${todayDate.getFullYear()}`;
+  todayPills.forEach(pill => {
+    pill.textContent = `Today, ${formattedToday}`;
+  });
 
   // Update Sidebar widgets & Header Profile Buttons
   const profileNameEls = document.querySelectorAll('.profile-name, .profile-toggle-name, .profile-card-name');
@@ -2293,10 +2301,11 @@ renderAttendanceLeaderboard();
    INDIA REGIONAL ACADEMIC & GAZETTED HOLIDAY CALENDAR ENGINE
    ========================================================== */
 
+const currentRealDate = new Date();
 let calState = {
-  year: 2024,
-  month: 4, // May (0-indexed)
-  selectedDay: 6
+  year: currentRealDate.getFullYear(),
+  month: currentRealDate.getMonth(), // Current real month (0-indexed)
+  selectedDay: currentRealDate.getDate() // Current real day
 };
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -2474,10 +2483,19 @@ function renderSelectedDateEvents() {
   } else {
     if (subtitleEl) subtitleEl.textContent = 'Regular Academic Schedule';
     container.innerHTML = `
-      <div class="result-card">
-        <p class="result-term">Academic Timetable</p>
-        <p class="section-sub">Lectures and tutorial sessions are active as per department schedule.</p>
-      </div>
+      <a href="student-schedule.html" class="result-card clickable-shortcut-card" title="Click to view live timetable and room schedule" style="border-left: 4px solid var(--blue-600);">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <p class="result-term" style="margin: 0; color: var(--blue-700);">Academic Timetable</p>
+          <span style="font-size: 11.5px; font-weight: 700; color: var(--blue-600); display: flex; align-items: center; gap: 4px;">
+            Open Timetable
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </div>
+        <p class="section-sub" style="margin: 4px 0 0 0;">Lectures and tutorial sessions are active as per department schedule.</p>
+        <div style="margin-top: 8px;">
+          <span class="crumb-badge" style="font-size: 11px; padding: 3px 10px;">Click to View Department Schedule &rarr;</span>
+        </div>
+      </a>
     `;
   }
 }
