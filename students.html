@@ -66,16 +66,10 @@
     <header class="content-header">
       <div>
         <h2>Students Directory</h2>
-        <p class="welcome-line">Manage enrolled students, attendance profiles, and academic records</p>
+        <p class="welcome-line">View enrolled students, attendance profiles, and academic records (View Only)</p>
       </div>
       <div class="header-actions">
-        <button id="openAddStudentModal" class="btn-primary-action" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Add New Student
-        </button>
+        <span class="crumb-badge" style="padding: 6px 14px; font-size: 12.5px;">Enrolled Directory</span>
       </div>
     </header>
 
@@ -126,13 +120,11 @@
         <table class="data-table" id="studentsDirectoryTable">
           <thead>
             <tr>
-              <th><input type="checkbox" id="selectAllStudents"></th>
               <th>Roll No</th>
               <th>Student Name</th>
               <th>Faction / Course</th>
               <th>Attendance %</th>
               <th>Status</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="studentsTableBody">
@@ -149,47 +141,6 @@
 
   </main>
 
-</div>
-
-<!-- Add New Student Modal -->
-<div class="modal-overlay" id="addStudentModalOverlay">
-  <div class="modal-card">
-    <div class="modal-header">
-      <h3>Add New Student</h3>
-      <button class="modal-close" id="closeAddStudentModal" type="button">&times;</button>
-    </div>
-    <form id="addStudentForm">
-      <div class="modal-body">
-        <div class="modal-field">
-          <label for="newStudentName">Full Name</label>
-          <input type="text" id="newStudentName" placeholder="—" required>
-        </div>
-        <div class="modal-field">
-          <label for="newStudentRoll">Roll Number</label>
-          <input type="text" id="newStudentRoll" placeholder="—" required>
-        </div>
-        <div class="modal-field">
-          <label for="newStudentCourse">Faction & Course</label>
-          <input type="text" id="newStudentCourse" placeholder="—" required>
-        </div>
-        <div class="modal-field">
-          <label for="newStudentEmail">Email Address</label>
-          <input type="email" id="newStudentEmail" placeholder="—" required>
-        </div>
-        <div class="modal-field">
-          <label for="newStudentStatus">Status</label>
-          <select id="newStudentStatus" class="modal-select">
-            <option value="Active" selected>Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-secondary" id="cancelAddStudentModal">Cancel</button>
-        <button type="submit" class="btn-primary">Add Student</button>
-      </div>
-    </form>
-  </div>
 </div>
 
 <script src="script.js"></script>

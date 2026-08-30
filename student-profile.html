@@ -97,10 +97,10 @@
 
   <div style="display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-top: 8px;">
     
-    <!-- Profile Picture Personalization Card -->
+    <!-- Official Student Photo & ID Badge (Strictly View-Only) -->
     <section class="panel" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
       <div style="display: flex; align-items: center; gap: 8px;">
-        <h3>Profile Picture</h3>
+        <h3>Student Identity Card</h3>
       </div>
       
       <div style="position: relative; width: 120px; height: 120px;">
@@ -110,17 +110,14 @@
         </div>
       </div>
 
-      <div style="width: 100%;">
-        <label for="profilePhotoInput" class="btn-primary-action" style="display: block; width: 100%; cursor: pointer; text-align: center; margin-bottom: 8px; font-size: 13px;">
-          Upload New Photo
-        </label>
-        <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
-        <button type="button" class="btn-icon" style="width: 100%; color: var(--danger); background: none; border: none; cursor: pointer; font-weight: 600; padding: 6px; font-size: 12.5px;" onclick="removeProfilePhoto()">Remove Photo</button>
+      <div style="padding: 8px 16px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span style="font-size: 11.5px; font-weight: 700; color: #047857;">Verified Student Identity</span>
       </div>
 
-      <div style="padding: 10px; background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.15); border-radius: 8px; width: 100%;">
+      <div style="padding: 12px; background: rgba(241, 245, 249, 0.85); border: 1px solid rgba(226, 232, 240, 0.9); border-radius: 8px; width: 100%;">
         <p style="font-size: 11.5px; color: var(--ink-700); line-height: 1.4; margin: 0;">
-          Students are permitted to personalize their profile picture. All official records below are managed by Faculty.
+          All student profile records and biometric identification are strictly view-only and maintained by College Administration.
         </p>
       </div>
     </section>

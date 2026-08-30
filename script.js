@@ -1372,7 +1372,7 @@ function renderStudentsTable() {
   if (filtered.length === 0) {
     studentsTableBody.innerHTML = `
       <tr>
-        <td colspan="7" style="text-align:center; padding: 40px; color: var(--ink-500);">
+        <td colspan="5" style="text-align:center; padding: 40px; color: var(--ink-500);">
           No students found matching your criteria.
         </td>
       </tr>
@@ -1383,7 +1383,6 @@ function renderStudentsTable() {
       const statusClass = st.status === 'Active' ? 'active' : 'inactive';
       return `
         <tr>
-          <td><input type="checkbox" class="student-checkbox" value="${st.id}"></td>
           <td><strong>${st.roll}</strong></td>
           <td>
             <div class="student-meta">
@@ -1397,13 +1396,6 @@ function renderStudentsTable() {
           <td><span class="crumb-badge">${st.course}</span></td>
           <td><strong>${st.rate}</strong></td>
           <td><span class="status-badge ${statusClass}">${st.status}</span></td>
-          <td>
-            <div class="table-actions">
-              <button class="btn-icon" title="Edit Student" onclick="deleteStudent(${st.id})">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-              </button>
-            </div>
-          </td>
         </tr>
       `;
     }).join('');
