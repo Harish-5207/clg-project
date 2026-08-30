@@ -1514,91 +1514,114 @@ function closeDevIframe() {
 }
 
 /* ==========================================================
-   ATTENDANCE MARKING SHEET LOGIC (attendance.html)
+   STUDENT PERSONAL ATTENDANCE RECORD SHEET (attendance.html)
    ========================================================== */
 
-let markingSheetData = [
-  { id: 1, name: 'Aarav Sharma', roll: '2024-CS-001', isPresent: true },
-  { id: 2, name: 'Anjali Sharma', roll: '2024-CS-002', isPresent: true },
-  { id: 3, name: 'Karan Singh', roll: '2024-CS-003', isPresent: false },
-  { id: 4, name: 'Pooja Patel', roll: '2024-CS-004', isPresent: true },
-  { id: 5, name: 'Rahul Yadav', roll: '2024-CS-005', isPresent: true }
-];
+function getStudentAttendanceLogs() {
+  const stored = localStorage.getItem('Ad-Reg_my_attendance_logs');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) {}
+  }
+  return [
+    { id: 1, date: '06 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Dr. Rajesh Verma', topic: 'Graph Traversals (BFS & DFS)', status: 'Present' },
+    { id: 2, date: '05 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Prof. Anjali Mehta', topic: 'Express REST API Endpoints', status: 'Present' },
+    { id: 3, date: '04 May 2024, 10:00 AM', subject: 'Database Management Systems', subjectKey: 'dbms', faculty: 'Prof. S. Kulkarni', topic: 'Indexing and B-Trees', status: 'Present' },
+    { id: 4, date: '03 May 2024, 02:00 PM', subject: 'Computer Networks & Security', subjectKey: 'cn', faculty: 'Dr. K. Sharma', topic: 'TCP vs UDP Protocols', status: 'Present' },
+    { id: 5, date: '02 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Dr. Rajesh Verma', topic: 'AVL Tree Balancing & Rotations', status: 'Present' },
+    { id: 6, date: '01 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Prof. Anjali Mehta', topic: 'MongoDB Aggregations', status: 'Present' }
+  ];
+}
 
-function renderAttendanceMarkingSheet() {
-  const tableBody = document.getElementById('attendanceMarkingBody');
+function renderMyAttendanceRecordSheet() {
+  const tableBody = document.getElementById('myAttendanceLogsBody');
   if (!tableBody) return;
 
-  const searchInput = document.getElementById('markingSearchInput');
+  const searchInput = document.getElementById('myAttendanceSearchInput');
+  const subjectFilter = document.getElementById('mySubjectFilter');
+  const statusFilter = document.getElementById('myStatusFilter');
+
   const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  const selSubject = subjectFilter ? subjectFilter.value : 'all';
+  const selStatus = statusFilter ? statusFilter.value : 'all';
 
-  const filtered = markingSheetData.filter(s =>
-    s.name.toLowerCase().includes(query) || s.roll.toLowerCase().includes(query)
-  );
+  const logs = getStudentAttendanceLogs();
 
-  tableBody.innerHTML = filtered.map((s, index) => `
-    <tr>
-      <td><strong>${index + 1}</strong></td>
-      <td><strong>${s.name}</strong></td>
-      <td><span class="crumb-badge">${s.roll}</span></td>
-      <td>
-        <label class="toggle-switch">
-          <span>${s.isPresent ? 'Present' : 'Absent'}</span>
-          <input type="checkbox" class="toggle-input" ${s.isPresent ? 'checked' : ''} onchange="toggleMarkingStatus(${s.id}, this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
-      </td>
-    </tr>
-  `).join('');
+  const filtered = logs.filter(log => {
+    const matchesQuery = !query ||
+      log.subject.toLowerCase().includes(query) ||
+      log.topic.toLowerCase().includes(query) ||
+      log.faculty.toLowerCase().includes(query) ||
+      log.date.toLowerCase().includes(query);
 
-  updateMarkingStats();
-}
+    const matchesSubject = selSubject === 'all' || log.subjectKey === selSubject;
+    const matchesStatus = selStatus === 'all' || log.status === selStatus;
 
-function toggleMarkingStatus(id, isPresent) {
-  const student = markingSheetData.find(s => s.id === id);
-  if (student) {
-    student.isPresent = isPresent;
-    renderAttendanceMarkingSheet();
-  }
-}
+    return matchesQuery && matchesSubject && matchesStatus;
+  });
 
-function markAllStatus(isPresent) {
-  markingSheetData.forEach(s => s.isPresent = isPresent);
-  renderAttendanceMarkingSheet();
-}
+  // Calculate Metrics
+  const total = logs.length;
+  const attended = logs.filter(l => l.status === 'Present').length;
+  const missed = total - attended;
+  const rate = total > 0 ? ((attended / total) * 100).toFixed(1) : '0.0';
 
-function updateMarkingStats() {
-  const total = markingSheetData.length;
-  const present = markingSheetData.filter(s => s.isPresent).length;
-  const absent = total - present;
-  const rate = total > 0 ? ((present / total) * 100).toFixed(1) : '0.0';
+  const overallEl = document.getElementById('myOverallRate');
+  const totalEl = document.getElementById('myTotalLectures');
+  const attendedEl = document.getElementById('myAttendedLectures');
+  const missedEl = document.getElementById('myMissedLectures');
+  const summaryEl = document.getElementById('myAttendanceSummaryText');
 
-  const totalEl = document.getElementById('markTotalCount');
-  const presentEl = document.getElementById('markPresentCount');
-  const absentEl = document.getElementById('markAbsentCount');
-  const rateEl = document.getElementById('markPercentageRate');
-  const summaryEl = document.getElementById('markingSummaryText');
-
+  if (overallEl) overallEl.textContent = `${rate}%`;
   if (totalEl) totalEl.textContent = total;
-  if (presentEl) presentEl.textContent = present;
-  if (absentEl) absentEl.textContent = absent;
-  if (rateEl) rateEl.textContent = `${rate}%`;
-  if (summaryEl) summaryEl.textContent = `${present} Present, ${absent} Absent out of ${total} students`;
+  if (attendedEl) attendedEl.textContent = attended;
+  if (missedEl) missedEl.textContent = missed;
+  if (summaryEl) summaryEl.textContent = `Showing ${filtered.length} of ${total} verified lecture records`;
+
+  if (filtered.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align:center; padding: 36px; color: var(--ink-500);">
+          No attendance logs found matching your filter criteria.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tableBody.innerHTML = filtered.map(log => {
+    const isPresent = log.status === 'Present';
+    const badgeClass = isPresent ? 'active' : 'inactive';
+    return `
+      <tr>
+        <td><strong>${log.date}</strong></td>
+        <td><span class="crumb-badge">${log.subject}</span></td>
+        <td>${log.faculty}</td>
+        <td>${log.topic}</td>
+        <td>
+          <span class="status-badge ${badgeClass}">${log.status}</span>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
-function saveAttendanceSheet() {
-  const present = markingSheetData.filter(s => s.isPresent).length;
-  const total = markingSheetData.length;
-  alert(`Attendance Saved Successfully\n\n${present}/${total} students marked Present for CS B.Tech 2nd Year session.`);
+const myAttendanceSearchInput = document.getElementById('myAttendanceSearchInput');
+if (myAttendanceSearchInput) {
+  myAttendanceSearchInput.addEventListener('input', renderMyAttendanceRecordSheet);
 }
 
-const markingSearchInput = document.getElementById('markingSearchInput');
-if (markingSearchInput) {
-  markingSearchInput.addEventListener('input', renderAttendanceMarkingSheet);
+const mySubjectFilter = document.getElementById('mySubjectFilter');
+if (mySubjectFilter) {
+  mySubjectFilter.addEventListener('change', renderMyAttendanceRecordSheet);
 }
 
-// Initial render for attendance marking sheet
-renderAttendanceMarkingSheet();
+const myStatusFilter = document.getElementById('myStatusFilter');
+if (myStatusFilter) {
+  myStatusFilter.addEventListener('change', renderMyAttendanceRecordSheet);
+}
+
+// Initial render for student attendance sheet
+renderMyAttendanceRecordSheet();
 
 /* ==========================================================
    STUDENT PERSONALIZATION & PROFILE STATE MANAGER
