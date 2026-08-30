@@ -1717,9 +1717,12 @@ const defaultStudentProfile = {
   roll: 'STU-2024-001',
   faction: 'B.Tech CS 2nd Year',
   email: 'student@college.edu',
-  phone: '—',
-  emergency: '—',
-  address: '—',
+  dob: '2004-05-12',
+  dobLocked: true,
+  dobLockedDate: '15 Jan 2024',
+  phone: '+91 98765 43210',
+  emergency: '+91 91234 56789',
+  address: 'Room 304, Tech Tower Hostel, University Campus Residency',
   goal: '—',
   photoUrl: null
 };
@@ -1735,6 +1738,30 @@ function getStudentProfile() {
 function saveStudentProfile(profile) {
   localStorage.setItem('Ad-Reg_studentProfile', JSON.stringify(profile));
   updateStudentSidebarWidgets();
+}
+
+function formatDobDisplay(dateStr) {
+  if (!dateStr) return '—';
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const d = parseInt(parts[2], 10);
+  const m = parseInt(parts[1], 10) - 1;
+  const y = parseInt(parts[0], 10);
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  return `${d} ${monthNames[m] || ''} ${y}`;
+}
+
+function calculateAgeYears(dateStr) {
+  if (!dateStr) return '';
+  const birthDate = new Date(dateStr);
+  const today = new Date();
+  if (isNaN(birthDate.getTime())) return '';
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return `${age} Years`;
 }
 
 function toggleStudentNavDropdown(e) {
@@ -1818,26 +1845,20 @@ function updateStudentSidebarWidgets() {
     }
   });
 
-  // Update Student Profile Form if on student-profile.html
+  // Update Student Profile Form fields on student-profile.html
   const nameInput = document.getElementById('studentNameInput');
   const rollInput = document.getElementById('studentRollInput');
   const factionInput = document.getElementById('studentFactionInput');
   const emailInput = document.getElementById('studentEmailInput');
-  const phoneInput = document.getElementById('studentPhoneInput');
-  const emergencyInput = document.getElementById('studentEmergencyInput');
   const addressInput = document.getElementById('studentAddressInput');
-  const goalInput = document.getElementById('studentGoalInput');
 
   if (nameInput) nameInput.value = profile.name || '';
   if (rollInput) rollInput.value = profile.roll || '';
   if (factionInput) factionInput.value = profile.faction || '';
   if (emailInput) emailInput.value = profile.email || '';
-  if (phoneInput) phoneInput.value = profile.phone || '';
-  if (emergencyInput) emergencyInput.value = profile.emergency || '';
   if (addressInput) addressInput.value = profile.address || '';
-  if (goalInput) goalInput.value = profile.goal || '';
 
-  // Update Verified Student Profile Card if on student-profile.html
+  // Update Quick ID Badges
   const cardNameEl = document.getElementById('studentCardName');
   const cardRollEl = document.getElementById('studentCardRoll');
   const cardFactionEl = document.getElementById('studentCardFaction');
@@ -1847,6 +1868,43 @@ function updateStudentSidebarWidgets() {
   if (cardRollEl) cardRollEl.textContent = profile.roll || '—';
   if (cardFactionEl) cardFactionEl.textContent = profile.faction || '—';
   if (cardEmailEl) cardEmailEl.textContent = profile.email || '—';
+
+  // Manage DOB Lock UI state
+  const dobUnsetWrapper = document.getElementById('dobUnsetWrapper');
+  const dobLockedWrapper = document.getElementById('dobLockedWrapper');
+  const lockedDobDisplay = document.getElementById('lockedDobDisplay');
+  const lockedDobAgeDisplay = document.getElementById('lockedDobAgeDisplay');
+  const dobContainer = document.getElementById('dobContainer');
+
+  if (dobUnsetWrapper && dobLockedWrapper) {
+    if (profile.dob && profile.dobLocked) {
+      dobUnsetWrapper.style.display = 'none';
+      dobLockedWrapper.style.display = 'block';
+      if (dobContainer) dobContainer.classList.add('is-locked');
+      if (lockedDobDisplay) lockedDobDisplay.textContent = formatDobDisplay(profile.dob);
+      if (lockedDobAgeDisplay) lockedDobAgeDisplay.textContent = `(Age: ${calculateAgeYears(profile.dob)})`;
+
+      // Check if there is a pending faculty correction request
+      const pendingReqs = getDobCorrectionRequests();
+      const myPending = pendingReqs.find(r => r.studentRoll === profile.roll && r.status === 'Pending Faculty Review');
+      const pendingBanner = document.getElementById('dobPendingRequestBanner');
+      const pendingVal = document.getElementById('pendingDobVal');
+      if (pendingBanner && pendingVal) {
+        if (myPending) {
+          pendingBanner.style.display = 'block';
+          pendingVal.textContent = `${formatDobDisplay(myPending.requestedDob)} (Reason: "${myPending.message.substring(0, 45)}...")`;
+        } else {
+          pendingBanner.style.display = 'none';
+        }
+      }
+    } else {
+      dobUnsetWrapper.style.display = 'block';
+      dobLockedWrapper.style.display = 'none';
+      if (dobContainer) dobContainer.classList.remove('is-locked');
+      const picker = document.getElementById('studentDobPicker');
+      if (picker && profile.dob) picker.value = profile.dob;
+    }
+  }
 
   // Photo Container Preview
   const imgPreview = document.getElementById('profileImagePreview');
@@ -1865,25 +1923,125 @@ function updateStudentSidebarWidgets() {
   }
 }
 
-// Student Profile Form Submission
-document.addEventListener('submit', (e) => {
-  if (e.target && e.target.id === 'studentProfileForm') {
-    e.preventDefault();
-    const profile = getStudentProfile();
+// Save Student Profile (Allows Name and Address updates)
+function handleStudentProfileSave(e) {
+  e.preventDefault();
+  const profile = getStudentProfile();
 
-    profile.name = document.getElementById('studentNameInput').value.trim();
-    profile.roll = document.getElementById('studentRollInput').value.trim();
-    profile.faction = document.getElementById('studentFactionInput').value.trim();
-    profile.email = document.getElementById('studentEmailInput').value.trim();
-    profile.phone = document.getElementById('studentPhoneInput').value.trim();
-    profile.emergency = document.getElementById('studentEmergencyInput').value.trim();
-    profile.address = document.getElementById('studentAddressInput').value.trim();
-    profile.goal = document.getElementById('studentGoalInput').value.trim();
+  const nameVal = document.getElementById('studentNameInput').value.trim();
+  const addressVal = document.getElementById('studentAddressInput').value.trim();
 
-    saveStudentProfile(profile);
-    alert('Student Profile Changes Saved Successfully!');
+  if (!nameVal || !addressVal) {
+    alert('Please provide both your Full Name and Residential Address.');
+    return;
   }
-});
+
+  profile.name = nameVal;
+  profile.address = addressVal;
+
+  saveStudentProfile(profile);
+  alert(`Student Profile Updated!\n\nName: ${profile.name}\nAddress: ${profile.address}\n\nYour changes have been saved to your student record.`);
+}
+
+// DOB Entry & Confirmation Modal System
+let tempSelectedDob = '';
+
+function initiateDobLockPrompt() {
+  const picker = document.getElementById('studentDobPicker');
+  if (!picker || !picker.value) {
+    alert('Please select your Date of Birth in the date picker first.');
+    return;
+  }
+
+  tempSelectedDob = picker.value;
+  const formatted = formatDobDisplay(tempSelectedDob);
+  const age = calculateAgeYears(tempSelectedDob);
+
+  const dateEl = document.getElementById('dobPromptFormattedDate');
+  const ageEl = document.getElementById('dobPromptAgeText');
+  const modal = document.getElementById('dobConfirmModalOverlay');
+
+  if (dateEl) dateEl.textContent = formatted;
+  if (ageEl) ageEl.textContent = `Calculated Age: ${age}`;
+  if (modal) modal.classList.add('active');
+}
+
+function closeDobConfirmModal() {
+  const modal = document.getElementById('dobConfirmModalOverlay');
+  if (modal) modal.classList.remove('active');
+}
+
+function confirmAndLockDob() {
+  if (!tempSelectedDob) return;
+  const profile = getStudentProfile();
+  profile.dob = tempSelectedDob;
+  profile.dobLocked = true;
+  profile.dobLockedDate = formatDobDisplay(tempSelectedDob);
+
+  saveStudentProfile(profile);
+  closeDobConfirmModal();
+
+  alert(`Date of Birth Permanently Locked!\n\nYour official Date of Birth is now recorded as: ${formatDobDisplay(tempSelectedDob)} (${calculateAgeYears(tempSelectedDob)}).\n\nAs per university regulations, this date is locked. Any future changes require formal Faculty Administration approval.`);
+  updateStudentSidebarWidgets();
+}
+
+// Faculty Approval DOB Correction System
+function getDobCorrectionRequests() {
+  const stored = localStorage.getItem('Ad-Reg_dob_change_requests');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) {}
+  }
+  return [];
+}
+
+function saveDobCorrectionRequests(list) {
+  localStorage.setItem('Ad-Reg_dob_change_requests', JSON.stringify(list));
+}
+
+function openRequestDobChangeModal() {
+  const profile = getStudentProfile();
+  const modal = document.getElementById('requestDobChangeModalOverlay');
+  const currentDobEl = document.getElementById('modalCurrentLockedDob');
+  if (currentDobEl) currentDobEl.textContent = `${formatDobDisplay(profile.dob)} (Age: ${calculateAgeYears(profile.dob)})`;
+  if (modal) modal.classList.add('active');
+}
+
+function closeRequestDobChangeModal() {
+  const modal = document.getElementById('requestDobChangeModalOverlay');
+  if (modal) modal.classList.remove('active');
+}
+
+function handleDobCorrectionRequestSubmit(e) {
+  e.preventDefault();
+  const profile = getStudentProfile();
+  const reqDob = document.getElementById('modalRequestedNewDob').value;
+  const msg = document.getElementById('modalDobCustomMessage').value.trim();
+
+  if (!reqDob || !msg) {
+    alert('Please specify the requested date of birth and provide a detailed explanation for faculty review.');
+    return;
+  }
+
+  const list = getDobCorrectionRequests();
+  const newReq = {
+    id: 'DOB-REQ-' + Math.floor(1000 + Math.random() * 9000),
+    studentRoll: profile.roll,
+    studentName: profile.name,
+    currentDob: profile.dob,
+    requestedDob: reqDob,
+    message: msg,
+    submittedDate: new Date().toLocaleDateString(),
+    status: 'Pending Faculty Review'
+  };
+
+  list.unshift(newReq);
+  saveDobCorrectionRequests(list);
+
+  alert(`DOB Correction Request Forwarded to Faculty!\n\nRequested Date: ${formatDobDisplay(reqDob)}\nCustom Explanation: "${msg}"\n\nYour Department Head and Faculty Administration have been notified for review.`);
+  closeRequestDobChangeModal();
+  document.getElementById('dobCorrectionForm').reset();
+  updateStudentSidebarWidgets();
+}
 
 // Profile Photo File Upload Delegated Handler
 document.addEventListener('change', (e) => {
