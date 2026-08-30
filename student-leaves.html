@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal — Leave Applications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-body">
+<div class="student-portal-shell">
+
+  <!-- Top Navigation & Brand Bar -->
+  <header class="student-portal-top-bar">
+    <!-- Left: Rectangular Profile Badge with Snug Floating Dropdown -->
+    <div class="student-profile-dropdown-wrapper" id="profileDropdownWrapper">
+      <div class="student-profile-header-card" onclick="toggleStudentNavDropdown(event)" title="Click to Open Menu Navigation">
+        <div class="avatar-circle">—</div>
+        <div class="profile-card-text">
+          <div class="profile-card-name" id="studentSidebarName">—</div>
+          <div class="profile-card-meta" id="studentSidebarMeta">—</div>
+        </div>
+        <div class="profile-card-arrow">
+          <svg class="chevron-dropdown-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Floating Frosted Glass Dropdown Menu — snugly wraps navigation options -->
+      <nav class="student-nav-dropdown-menu" id="studentNavDropdown">
+        <a href="student-dashboard.html" class="student-dropdown-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span>Overview & Stats</span>
+        </a>
+        <a href="calendar.html" class="student-dropdown-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Academic Calendar</span>
+        </a>
+        <a href="student-profile.html" class="student-dropdown-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+          <span>My Profile & Personalization</span>
+        </a>
+        <a href="student-leaves.html" class="student-dropdown-item active">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Leave Applications</span>
+        </a>
+        <a href="student-reports.html" class="student-dropdown-item">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Results & Reports</span>
+        </a>
+        <a href="student-schedule.html" class="student-dropdown-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Holidays & Schedule</span>
+        </a>
+        <div class="student-dropdown-divider"></div>
+        <a href="index.html" class="student-dropdown-item text-danger">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+          <span>Logout</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Right: Crumb Badge, Today Pill & Rectangular Student Portal Brand Badge -->
+    <div class="header-actions">
+      <button class="btn-primary-action" id="openApplyLeaveModal">+ Apply for New Leave</button>
+
+      <div class="student-portal-header-badge" title="Student Portal — FYJC to Degree Level">
+        <div style="width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size: 13.5px; font-weight: 800; color: #1e3a8a; line-height: 1.1;">
+            <span style="color: #2563eb;">Student</span> Portal
+          </div>
+          <div style="font-size: 10.5px; font-weight: 600; color: #64748b; margin-top: 1px;">
+            FYJC to Degree Level
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Welcome Header Banner -->
+  <div class="portal-welcome-banner">
+    <div>
+      <h2>Leave Applications & Requests</h2>
+      <p class="welcome-line">Submit and track your academic leave permissions</p>
+    </div>
+  </div>
+
+    <!-- Leaves Summary Cards -->
+    <section class="stat-grid">
+      <div class="stat-card">
+        <p class="stat-label">Total Applied</p>
+        <p class="stat-value" id="totalLeavesCount">3</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Approved Leaves</p>
+        <p class="stat-value" style="color: #10b981;" id="approvedLeavesCount">2</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Pending Approval</p>
+        <p class="stat-value" style="color: #f59e0b;" id="pendingLeavesCount">1</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Rejected / Cancelled</p>
+        <p class="stat-value" style="color: var(--danger);" id="rejectedLeavesCount">0</p>
+      </div>
+    </section>
+
+    <!-- Leave Applications History Table -->
+    <section class="panel" style="margin-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3>My Leave History</h3>
+        <span class="crumb-badge" id="studentCrumbBadge">—</span>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Leave ID</th>
+              <th>Leave Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Days</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="studentLeavesTableBody">
+            <!-- Dynamic Records via script.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+</div> <!-- .student-portal-shell -->
+
+<!-- Apply Leave Modal -->
+<div class="modal-overlay" id="applyLeaveModalOverlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>
+        <h3>Apply for Leave</h3>
+        <p class="modal-sub">Submit your leave request to faculty admin</p>
+      </div>
+      <button class="modal-close" id="closeLeaveModal" type="button">&times;</button>
+    </div>
+    <form id="applyLeaveForm">
+      <div class="modal-body">
+        <div class="modal-field">
+          <label for="leaveType">Leave Type</label>
+          <select id="leaveType" class="modal-select">
+            <option value="Medical / Sick Leave" selected>Medical / Sick Leave</option>
+            <option value="Academic Hackathon / Event">Academic Hackathon / Event</option>
+            <option value="Personal / Family Leave">Personal / Family Leave</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="leaveStartDate">Start Date</label>
+          <input type="date" id="leaveStartDate" required class="modal-select">
+        </div>
+        <div class="modal-field">
+          <label for="leaveEndDate">End Date</label>
+          <input type="date" id="leaveEndDate" class="modal-select">
+        </div>
+        <div class="modal-field">
+          <label for="leaveReason">Reason / Remarks</label>
+          <textarea id="leaveReason" rows="3" class="modal-select" style="resize: vertical;" placeholder="—" required></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelLeaveModal">Cancel</button>
+        <button type="submit" class="btn-primary">Submit Application</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

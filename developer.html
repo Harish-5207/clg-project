@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad-Reg â€” Developer Master Control Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-body dev-gamer-theme">
+
+<div class="app-shell">
+
+  <!-- Developer Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="badge developer-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+      </span>
+      <div>
+        <h1><span class="accent">Developer</span><span class="dark">Master</span></h1>
+        <p class="sidebar-tag">CYBER MATRIX CONSOLE</p>
+      </div>
+    </div>
+
+    <nav class="nav-list">
+      <a href="developer.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Master Overrides
+      </a>
+      <a href="superadmin.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Owner Control
+      </a>
+      <a href="dashboard.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Admin Dashboard
+      </a>
+      <a href="student-dashboard.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+        Student Portal
+      </a>
+      <a href="index.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+
+    <div class="help-widget">
+      <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <div>
+        <p class="help-title">DEV GAMER CONSOLE</p>
+        <p class="help-sub">GOD MODE ONLINE</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <header class="content-header">
+      <div>
+        <h2>Developer Master Control Panel</h2>
+        <p class="welcome-line">Total system authority & gamer cyber matrix console</p>
+      </div>
+      <div class="header-actions">
+        <span class="status-badge active" style="font-size: 13px; padding: 6px 14px; background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; box-shadow: 0 0 14px rgba(168, 85, 247, 0.6);">GOD MODE ONLINE</span>
+      </div>
+    </header>
+
+    <!-- Developer Stats -->
+    <section class="stat-grid">
+      <div class="stat-card">
+        <p class="stat-label">System Override Status</p>
+        <p class="stat-value stat-accent">Developer Enforced</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Admin Portal Status</p>
+        <p class="stat-value" id="devAdminStatusText">ONLINE</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Student Portal Status</p>
+        <p class="stat-value" id="devStudentStatusText">ONLINE</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">System Accounts Managed</p>
+        <p class="stat-value" id="devTotalAccountsCount">12</p>
+      </div>
+    </section>
+
+    <!-- Developer View Switcher & Live Impersonation Engine -->
+    <section class="panel section-space">
+      <div class="panel-title-row">
+        <div>
+          <h3>Developer Portal View Switcher</h3>
+          <p class="section-sub">Instantly switch between Student, Faculty Admin, Super Admin Owner, and Directory views</p>
+        </div>
+      </div>
+
+      <!-- Quick Launch View Cards -->
+      <div class="results-grid" style="margin-bottom: 20px;">
+        <div class="result-card" style="border-left: 4px solid var(--blue-600);">
+          <p class="result-term">Student Portal View</p>
+          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Track attendance, leave requests & report cards</p>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <a href="student-dashboard.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px;">Launch Full Screen â†—</a>
+            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('student-dashboard.html')">Embed Preview</button>
+          </div>
+        </div>
+
+        <div class="result-card" style="border-left: 4px solid #16a34a;">
+          <p class="result-term">Faculty Admin View</p>
+          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Faction selector, stats & weekly trend graphs</p>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <a href="dashboard.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #16a34a;" target="_self">Launch Full Screen â†—</a>
+            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('dashboard.html')">Embed Preview</button>
+          </div>
+        </div>
+
+        <div class="result-card" style="border-left: 4px solid #7c3aed;">
+          <p class="result-term">Super Admin Owner View</p>
+          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Faculty approvals queue & owner authority</p>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <a href="superadmin.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #7c3aed;" target="_self">Launch Full Screen â†—</a>
+            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('superadmin.html')">Embed Preview</button>
+          </div>
+        </div>
+
+        <div class="result-card" style="border-left: 4px solid #0891b2;">
+          <p class="result-term">Students Directory View</p>
+          <p class="result-marks" style="font-size: 14px; font-weight: 600; color: var(--ink-700);">Search, directory list & add student modal</p>
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <a href="students.html" class="btn-primary-action" style="padding: 6px 12px; font-size: 12px; background: #0891b2;" target="_self">Launch Full Screen â†—</a>
+            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="loadDevIframe('students.html')">Embed Preview</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Embedded Live View Container -->
+      <div id="devIframeContainer" style="display: none; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; background: var(--white); box-shadow: var(--shadow-card);">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--border);">
+          <div style="display: flex; items-center; gap: 8px;">
+            <span class="crumb-title" id="devIframeTitle">Live Preview Frame</span>
+          </div>
+          <button class="btn-icon" onclick="closeDevIframe()" title="Close Frame">&times;</button>
+        </div>
+        <iframe id="devPreviewIframe" src="" style="width: 100%; height: 550px; border: none;"></iframe>
+      </div>
+    </section>
+
+    <!-- Global System Access Switches -->
+    <section class="panel section-space">
+      <div class="panel-title-row">
+        <div>
+          <h3>Global System Access Toggles</h3>
+          <p class="section-sub">Enable or lock down entire portals across the system instantly</p>
+        </div>
+      </div>
+
+      <div class="holidays-list">
+        <div class="holiday-item">
+          <div class="holiday-info">
+            <p class="holiday-title">Admin & Faculty Portal Access</p>
+            <p class="holiday-date">Controls whether faculty admins can log into dashboard.html</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleAdminPortal" class="toggle-input" checked onchange="toggleDevPortal('admin', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="holiday-item">
+          <div class="holiday-info">
+            <p class="holiday-title">Student Portal Access</p>
+            <p class="holiday-date">Controls whether students can log into student-dashboard.html</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleStudentPortal" class="toggle-input" checked onchange="toggleDevPortal('student', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="holiday-item">
+          <div class="holiday-info">
+            <p class="holiday-title">Strict Faculty Approval Enforcement</p>
+            <p class="holiday-date">When enabled, faculty sign-ups MUST be approved before login</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleFacultyEnforce" class="toggle-input" checked onchange="toggleDevPortal('facultyEnforce', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Developer Account Master Directory -->
+    <section class="panel section-space">
+      <div class="panel-title-row">
+        <div>
+          <h3>Master Account & Role Directory</h3>
+          <p class="section-sub">Override permissions for any user (Super Admin, Admins, Faculty, Students)</p>
+        </div>
+        <button class="btn-primary-action" type="button" onclick="openDevAddAccountModal()">+ Add System User</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Account ID / Email</th>
+              <th>User Name</th>
+              <th>System Role</th>
+              <th>Access Level</th>
+              <th>Developer Action</th>
+            </tr>
+          </thead>
+          <tbody id="developerAccountsTableBody">
+            <!-- Rendered dynamically via script.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Live System Audit Logs -->
+    <section class="panel section-space">
+      <div class="panel-title-row">
+        <div>
+          <h3>Developer Live Access Logs</h3>
+          <p class="section-sub">Real-time log of security events and access overrides</p>
+        </div>
+      </div>
+
+      <ul class="activity-list" id="developerAuditLogs">
+        <li class="activity-item">
+          <span class="activity-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+          <div>
+            <p class="activity-text">Developer Master Control Panel Initialized</p>
+            <p class="activity-time">Just now â€” God Mode active</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+</div>
+
+<!-- Developer Modal: Add System User -->
+<div class="modal-overlay" id="devUserModalOverlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Developer Create User Override</h3>
+      <button class="modal-close" id="closeDevUserModal" type="button">&times;</button>
+    </div>
+    <form id="devUserForm">
+      <div class="modal-body">
+        <div class="modal-field">
+          <label for="devUserName">User Name</label>
+          <input type="text" id="devUserName" required placeholder="â€”">
+        </div>
+        <div class="modal-field">
+          <label for="devUserEmail">Email Address</label>
+          <input type="email" id="devUserEmail" required placeholder="â€”">
+        </div>
+        <div class="modal-field">
+          <label for="devUserRole">System Role</label>
+          <select id="devUserRole" class="modal-select">
+            <option value="Super Admin">Super Admin / Owner</option>
+            <option value="Verified Faculty Admin" selected>Verified Faculty Admin</option>
+            <option value="Student">Student</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelDevUserModal">Cancel</button>
+        <button type="submit" class="btn-primary">Create User</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

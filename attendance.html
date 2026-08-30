@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad-Reg â€” Mark Attendance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-body">
+
+<div class="app-shell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="badge">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 12L9.5 17.5L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <div>
+        <h1><span class="accent">Ad-</span><span class="dark">Reg</span></h1>
+        <p class="sidebar-tag">Smart Attendance System</p>
+      </div>
+    </div>
+
+    <nav class="nav-list">
+      <a href="dashboard.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Dashboard
+      </a>
+      <a href="students.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+        Students
+      </a>
+      <a href="attendance.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+        Attendance
+      </a>
+      <a href="reports.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+        Reports
+      </a>
+      <a href="settings.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+        Settings
+      </a>
+      <a href="index.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+
+    <div class="help-widget">
+      <svg viewBox="0 0 24 24"><path d="M12 19v2M12 3a5 5 0 0 0-5 5c0 2 1 3 2 4s1.5 1.5 1.5 3"/><circle cx="12" cy="9" r="0"/></svg>
+      <div>
+        <p class="help-title">Need Help?</p>
+        <p class="help-sub">Contact Support</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <header class="content-header">
+      <div>
+        <h2>Mark Attendance</h2>
+        <p class="welcome-line">Home &gt; Attendance Marking Sheet</p>
+      </div>
+      <div class="header-actions">
+        <div class="select-wrapper">
+          <button type="button" class="btn-faction-selector" id="openFactionBtn">
+            <svg viewBox="0 0 24 24" class="faction-icon" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span id="factionButtonText">CS &gt; B.Tech &gt; 2nd Year</span>
+          </button>
+        </div>
+        <input type="date" id="attendanceDatePicker" class="select-pill" value="2024-05-06">
+      </div>
+    </header>
+
+    <!-- Live Attendance Marking Stats Summary -->
+    <section class="stat-grid">
+      <div class="stat-card">
+        <p class="stat-label">Total Students</p>
+        <p class="stat-value" id="markTotalCount">5</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Present Count</p>
+        <p class="stat-value" id="markPresentCount">4</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Absent Count</p>
+        <p class="stat-value stat-danger" id="markAbsentCount">1</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Attendance %</p>
+        <p class="stat-value stat-accent" id="markPercentageRate">80.0%</p>
+      </div>
+    </section>
+
+    <!-- Marking Table Panel -->
+    <section class="panel table-panel">
+      
+      <div class="table-toolbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="markingSearchInput" placeholder="â€”">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn-primary-action" style="background: #16a34a;" onclick="markAllStatus(true)">Mark All Present</button>
+          <button type="button" class="btn-secondary" style="color: var(--danger); border-color: #fee2e2;" onclick="markAllStatus(false)">Mark All Absent</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Student Name</th>
+              <th>Roll Number</th>
+              <th>Status Toggle</th>
+            </tr>
+          </thead>
+          <tbody id="attendanceMarkingBody">
+            <!-- Rendered via script.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <p id="markingSummaryText">5 students in this session</p>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" class="btn-secondary" onclick="location.reload()">Reset Sheet</button>
+          <button type="button" class="btn-primary-action" onclick="saveAttendanceSheet()">Save Attendance Sheet</button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

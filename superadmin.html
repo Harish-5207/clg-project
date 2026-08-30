@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad-Reg â€” Super Admin Control Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="app-body">
+
+<div class="app-shell">
+
+  <!-- Super Admin Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="badge superadmin-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </span>
+      <div>
+        <h1><span class="accent">Owner</span><span class="dark">Control</span></h1>
+        <p class="sidebar-tag">Super Admin System</p>
+      </div>
+    </div>
+
+    <nav class="nav-list">
+      <a href="superadmin.html" class="nav-item active">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Faculty Approvals
+      </a>
+      <a href="dashboard.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Admin Dashboard
+      </a>
+      <a href="index.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </a>
+    </nav>
+
+    <div class="help-widget">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <div>
+        <p class="help-title">Super Admin Level</p>
+        <p class="help-sub">Full System Authority</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+
+    <header class="content-header">
+      <div>
+        <h2>Super Admin Control Center</h2>
+        <p class="welcome-line">Review legit faculty verification requests, approve new admins, and revoke access</p>
+      </div>
+      <div class="header-actions">
+        <span class="status-badge active" style="font-size: 13px; padding: 6px 14px;">Owner Logged In</span>
+      </div>
+    </header>
+
+    <!-- Super Admin Stat Grid -->
+    <section class="stat-grid">
+      <div class="stat-card">
+        <p class="stat-label">Pending Approval Requests</p>
+        <p class="stat-value stat-danger" id="pendingRequestsCount">2</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Authorized Faculty Admins</p>
+        <p class="stat-value stat-accent" id="authorizedAdminsCount">3</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">System Access Status</p>
+        <p class="stat-value">Secured</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Verification Mode</p>
+        <p class="stat-value" style="font-size: 18px; color: var(--blue-700);">Owner Approval Only</p>
+      </div>
+    </section>
+
+    <!-- Pending Faculty Approvals Section -->
+    <section class="panel section-space">
+      <div class="panel-title-row">
+        <div>
+          <h3>Pending Faculty Verification Requests</h3>
+          <p class="section-sub">Legit faculty members requesting admin access to the college portal</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Faculty ID</th>
+              <th>Faculty Name</th>
+              <th>Department / Faction</th>
+              <th>Official Email</th>
+              <th>Date Requested</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="pendingFacultyTableBody">
+            <!-- Rendered via script.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Authorized Active Admins Section -->
+    <section class="panel section-space">
+      <div class="panel-title-row">
+        <div>
+          <h3>Authorized Active Faculty Admins</h3>
+          <p class="section-sub">Faculty members currently verified and allowed to log into the Admin Panel</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Faculty ID</th>
+              <th>Faculty Name</th>
+              <th>Department / Faction</th>
+              <th>Official Email</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="activeAdminsTableBody">
+            <!-- Rendered via script.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

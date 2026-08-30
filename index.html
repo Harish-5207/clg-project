@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad-Reg â€” Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="page">
+
+  <div class="brand">
+    <div class="brand-mark">
+      <span class="badge">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 12L9.5 17.5L20 6" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <h1><span class="accent">Ad-</span><span class="dark">Reg</span></h1>
+    </div>
+    <p>Smart Attendance Register for Colleges</p>
+  </div>
+
+  <div class="card">
+
+    <div class="illustration">
+      <div class="float-dot fd1"></div>
+      <div class="float-dot fd2"></div>
+      <div class="float-dot fd3"></div>
+      <svg viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="160" cy="285" rx="110" ry="14" fill="#1d4ed8" opacity="0.08"/>
+
+        <!-- plant -->
+        <g>
+          <rect x="34" y="222" width="46" height="40" rx="6" fill="#1e3a8a"/>
+          <rect x="34" y="222" width="46" height="10" rx="4" fill="#1d4ed8"/>
+          <path d="M57 222C57 222 40 200 44 178C48 156 57 150 57 150C57 150 66 156 70 178C74 200 57 222 57 222Z" fill="#3b82f6"/>
+          <path d="M57 222C57 222 30 210 24 190C24 190 40 180 50 196C56 204 57 222 57 222Z" fill="#2563eb"/>
+          <path d="M57 222C57 222 84 210 90 190C90 190 74 180 64 196C58 204 57 222 57 222Z" fill="#2563eb"/>
+        </g>
+
+        <!-- desk -->
+        <rect x="90" y="230" width="190" height="10" rx="3" fill="#dbeafe"/>
+        <rect x="100" y="240" width="8" height="34" fill="#c7ddfb"/>
+        <rect x="262" y="240" width="8" height="34" fill="#c7ddfb"/>
+
+        <!-- laptop -->
+        <g>
+          <rect x="150" y="196" width="80" height="52" rx="6" fill="#1e3a8a"/>
+          <rect x="156" y="202" width="68" height="40" rx="3" fill="#eff6ff"/>
+          <rect x="170" y="215" width="40" height="4" rx="2" fill="#3b82f6"/>
+          <rect x="170" y="223" width="26" height="4" rx="2" fill="#93c5fd"/>
+          <path d="M138 248H242L250 260C251.5 262.5 249.6 266 246.6 266H133.4C130.4 266 128.5 262.5 130 260L138 248Z" fill="#2563eb"/>
+        </g>
+
+        <!-- person -->
+        <g>
+          <circle cx="190" cy="128" r="20" fill="#f2c29b"/>
+          <path d="M172 122C172 108 182 100 190 100C201 100 212 109 210 124C210 124 206 116 196 116C186 116 178 122 172 128C171 126 172 124 172 122Z" fill="#2b2320"/>
+          <path d="M154 200C154 168 168 150 190 150C212 150 226 168 227 198L224 200H157L154 200Z" fill="#2563eb"/>
+          <path d="M182 150C182 150 186 160 190 160C194 160 198 150 198 150" stroke="#1e3a8a" stroke-width="2"/>
+          <path d="M200 172C212 176 220 186 222 198" stroke="#2563eb" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="223" cy="200" r="8" fill="#f2c29b"/>
+          <path d="M178 172C168 178 162 188 160 200" stroke="#2563eb" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="159" cy="201" r="8" fill="#f2c29b"/>
+        </g>
+
+        <!-- clock accent -->
+        <g transform="translate(238,70)">
+          <circle cx="0" cy="0" r="18" fill="#ffffff" stroke="#2563eb" stroke-width="3"/>
+          <path d="M0 -9V0L6 5" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="form-side">
+      <h2>Welcome Back!</h2>
+      <p class="subtitle">Login to continue to your account</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginRole">Login As</label>
+          <div class="input-wrap">
+            <select id="loginRole" class="modal-select" style="border:1px solid var(--border); padding:10px 14px; width:100%; border-radius:var(--radius-sm); font-weight:600; font-family:inherit;">
+              <option value="admin" selected>Verified Faculty Admin</option>
+              <option value="student">Student Portal (FYJC to Degree)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email Address</label>
+          <div class="input-wrap">
+            <input type="email" id="email" name="email" placeholder="â€”" autocomplete="username" required>
+          </div>
+          <div class="error-text" id="emailError">Please enter a valid email address.</div>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" placeholder="â€”" autocomplete="current-password" required>
+            <button type="button" class="toggle-visibility" id="toggleVisibility" aria-label="Show password">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div class="error-text" id="passwordError">Password must be at least 6 characters.</div>
+        </div>
+
+        <div class="row-between">
+          <label class="remember">
+            <input type="checkbox" id="remember" checked>
+            Remember me
+          </label>
+          <a href="#" class="forgot">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span class="spinner" id="spinner"></span>
+          <span id="btnText">Login</span>
+        </button>
+      </form>
+
+      <p class="signup-line">New Faculty Member? <a href="#" id="openFacultySignupBtn">Request Admin Verification</a></p>
+    </div>
+
+  </div>
+
+  <p class="footer-note" id="footerNote" style="cursor: pointer;" title="System Info">Â© 2024 Ad-Reg. All rights reserved.</p>
+
+</div>
+
+<!-- Secret Master Key Modal (Hidden Pathway) -->
+<div class="modal-overlay" id="masterKeyModalOverlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>
+        <h3 style="color: var(--blue-700);">Secret Master Key Authentication</h3>
+        <p class="modal-sub">Enter the Ultimate Master Passkey for Super Admin Owner access</p>
+      </div>
+      <button class="modal-close" id="closeMasterKeyModal" type="button">&times;</button>
+    </div>
+    <form id="masterKeyForm">
+      <div class="modal-body">
+        <div class="modal-field">
+          <label for="masterPasskey">Ultimate Master Passkey</label>
+          <input type="password" id="masterPasskey" placeholder="â€”" required autocomplete="off">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelMasterKeyModal">Cancel</button>
+        <button type="submit" class="btn-primary" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">Bypass & Authenticate</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Faculty Verification Sign Up Modal -->
+<div class="modal-overlay" id="facultySignupModalOverlay">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div>
+        <h3>Faculty Verification Request</h3>
+        <p class="modal-sub">Submit your official credentials for Super Admin verification</p>
+      </div>
+      <button class="modal-close" id="closeFacultySignupModal" type="button">&times;</button>
+    </div>
+    <form id="facultySignupForm">
+      <div class="modal-body">
+        <div class="modal-field">
+          <label for="facName">Full Name</label>
+          <input type="text" id="facName" placeholder="â€”" required>
+        </div>
+        <div class="modal-field">
+          <label for="facId">Faculty ID Number</label>
+          <input type="text" id="facId" placeholder="â€”" required>
+        </div>
+        <div class="modal-field">
+          <label for="facDept">Department / Faction</label>
+          <input type="text" id="facDept" placeholder="â€”" required>
+        </div>
+        <div class="modal-field">
+          <label for="facEmail">Official Email</label>
+          <input type="email" id="facEmail" placeholder="â€”" required>
+        </div>
+        <div class="modal-field">
+          <label for="facPass">Password</label>
+          <input type="password" id="facPass" placeholder="â€”" required minlength="6">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelFacultySignupModal">Cancel</button>
+        <button type="submit" class="btn-primary">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
