@@ -1607,14 +1607,12 @@ function getStudentAttendanceLogs() {
   if (stored) {
     try { return JSON.parse(stored); } catch(e) {}
   }
-  return [
-    { id: 1, date: '06 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Department Head (HOD)', topic: 'Graph Traversals (BFS & DFS)', status: 'Present' },
-    { id: 2, date: '05 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Course Faculty In-Charge', topic: 'Express REST API Endpoints', status: 'Present' },
-    { id: 3, date: '04 May 2024, 10:00 AM', subject: 'Database Management Systems', subjectKey: 'dbms', faculty: 'Subject Professor', topic: 'Indexing and B-Trees', status: 'Present' },
-    { id: 4, date: '03 May 2024, 02:00 PM', subject: 'Computer Networks & Security', subjectKey: 'cn', faculty: 'Faculty In-Charge', topic: 'TCP vs UDP Protocols', status: 'Present' },
-    { id: 5, date: '02 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Department Head (HOD)', topic: 'AVL Tree Balancing & Rotations', status: 'Present' },
-    { id: 6, date: '01 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Course Faculty In-Charge', topic: 'MongoDB Aggregations', status: 'Present' }
-  ];
+  // Default: Empty baseline until faculty marks lecture records
+  return [];
+}
+
+function saveStudentAttendanceLogs(list) {
+  localStorage.setItem('Ad-Reg_my_attendance_logs', JSON.stringify(list));
 }
 
 function renderMyAttendanceRecordSheet() {
@@ -1644,7 +1642,7 @@ function renderMyAttendanceRecordSheet() {
     return matchesQuery && matchesSubject && matchesStatus;
   });
 
-  // Calculate Metrics
+  // Calculate Metrics (Zero baseline when no logs exist)
   const total = logs.length;
   const attended = logs.filter(l => l.status === 'Present').length;
   const missed = total - attended;
@@ -1660,13 +1658,17 @@ function renderMyAttendanceRecordSheet() {
   if (totalEl) totalEl.textContent = total;
   if (attendedEl) attendedEl.textContent = attended;
   if (missedEl) missedEl.textContent = missed;
-  if (summaryEl) summaryEl.textContent = `Showing ${filtered.length} of ${total} verified lecture records`;
+  if (summaryEl) summaryEl.textContent = total > 0 ? `Showing ${filtered.length} of ${total} verified lecture records` : 'No lecture sessions recorded yet';
 
   if (filtered.length === 0) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="5" style="text-align:center; padding: 36px; color: var(--ink-500);">
-          No attendance logs found matching your filter criteria.
+        <td colspan="5" style="text-align:center; padding: 48px 20px; color: var(--ink-500);">
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--ink-400)" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span style="font-weight: 700; font-size: 14px; color: var(--ink-700);">No verified lecture logs recorded yet.</span>
+            <span style="font-size: 12px; color: var(--ink-500); max-width: 380px; line-height: 1.4;">Attendance data and verified percentages will appear here once faculty conduct and log lectures for your batch.</span>
+          </div>
         </td>
       </tr>
     `;
@@ -1713,7 +1715,7 @@ renderMyAttendanceRecordSheet();
    ========================================================== */
 
 const defaultStudentProfile = {
-  name: 'Student User',
+  name: 'Harish Prajapati',
   roll: 'STU-2024-001',
   faction: 'B.Tech CS 2nd Year',
   email: 'student@college.edu',
@@ -1837,37 +1839,51 @@ function updateStudentSidebarWidgets() {
       el.style.backgroundImage = `url(${profile.photoUrl})`;
       el.style.backgroundSize = 'cover';
       el.style.backgroundPosition = 'center';
-      el.textContent = '';
+      el.innerHTML = '';
     } else {
       el.style.backgroundImage = 'none';
-      const initials = (profile.name || 'ST').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
-      el.textContent = initials || 'ST';
+      el.style.backgroundColor = '';
+      const nameParts = (profile.name || 'Student').trim().split(/\s+/);
+      const initials = nameParts.length > 1 
+        ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+        : nameParts[0].substring(0, 2).toUpperCase();
+      el.innerHTML = `<span style="color:#ffffff; font-weight:800; font-size:13px; letter-spacing:0.5px;">${initials || 'ST'}</span>`;
     }
   });
 
-  // Update Student Profile Form fields on student-profile.html
+  // Update Student Profile Form fields on student-profile.html without clobbering active input
   const nameInput = document.getElementById('studentNameInput');
   const rollInput = document.getElementById('studentRollInput');
   const factionInput = document.getElementById('studentFactionInput');
   const emailInput = document.getElementById('studentEmailInput');
   const addressInput = document.getElementById('studentAddressInput');
 
-  if (nameInput) nameInput.value = profile.name || '';
+  if (nameInput && !nameInput.dataset.modified) nameInput.value = profile.name || '';
   if (rollInput) rollInput.value = profile.roll || '';
   if (factionInput) factionInput.value = profile.faction || '';
   if (emailInput) emailInput.value = profile.email || '';
-  if (addressInput) addressInput.value = profile.address || '';
+  if (addressInput && !addressInput.dataset.modified) addressInput.value = profile.address || '';
 
-  // Update Quick ID Badges
-  const cardNameEl = document.getElementById('studentCardName');
-  const cardRollEl = document.getElementById('studentCardRoll');
-  const cardFactionEl = document.getElementById('studentCardFaction');
-  const cardEmailEl = document.getElementById('studentCardEmail');
+  // Update e-ID Card widgets
+  const eidName = document.getElementById('eidStudentName');
+  const eidRoll = document.getElementById('eidStudentRoll');
+  const eidDept = document.getElementById('eidStudentDept');
+  const eidDob = document.getElementById('eidStudentDob');
+  const eidEmail = document.getElementById('eidStudentEmail');
+  const eidInitials = document.getElementById('eidProfileInitials');
 
-  if (cardNameEl) cardNameEl.textContent = profile.name || '—';
-  if (cardRollEl) cardRollEl.textContent = profile.roll || '—';
-  if (cardFactionEl) cardFactionEl.textContent = profile.faction || '—';
-  if (cardEmailEl) cardEmailEl.textContent = profile.email || '—';
+  if (eidName) eidName.textContent = profile.name || 'Student Name';
+  if (eidRoll) eidRoll.textContent = profile.roll || 'STU-001';
+  if (eidDept) eidDept.textContent = profile.faction || 'Department';
+  if (eidDob) eidDob.textContent = formatDobDisplay(profile.dob);
+  if (eidEmail) eidEmail.textContent = profile.email || 'student@college.edu';
+  if (eidInitials) {
+    const nameParts = (profile.name || 'ST').trim().split(/\s+/);
+    const initials = nameParts.length > 1 
+      ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+      : nameParts[0].substring(0, 2).toUpperCase();
+    eidInitials.textContent = initials;
+  }
 
   // Manage DOB Lock UI state
   const dobUnsetWrapper = document.getElementById('dobUnsetWrapper');
@@ -1923,6 +1939,20 @@ function updateStudentSidebarWidgets() {
   }
 }
 
+// Track input changes to toggle Change Status Icon before & after save
+function markProfileFieldModified(inputEl) {
+  if (inputEl) {
+    inputEl.dataset.modified = 'true';
+    const statusIcon = document.getElementById('profileSaveStatusIcon');
+    const statusText = document.getElementById('profileSaveStatusText');
+    if (statusIcon && statusText) {
+      statusIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
+      statusText.textContent = 'Unsaved Changes';
+      statusText.style.color = '#b45309';
+    }
+  }
+}
+
 // Save Student Profile (Allows Name and Address updates)
 function handleStudentProfileSave(e) {
   e.preventDefault();
@@ -1940,10 +1970,25 @@ function handleStudentProfileSave(e) {
   profile.address = addressVal;
 
   saveStudentProfile(profile);
-  alert(`Student Profile Updated!\n\nName: ${profile.name}\nAddress: ${profile.address}\n\nYour changes have been saved to your student record.`);
+
+  // Clear modified status and show Saved Checkmark Icon
+  const nameInput = document.getElementById('studentNameInput');
+  const addressInput = document.getElementById('studentAddressInput');
+  if (nameInput) delete nameInput.dataset.modified;
+  if (addressInput) delete addressInput.dataset.modified;
+
+  const statusIcon = document.getElementById('profileSaveStatusIcon');
+  const statusText = document.getElementById('profileSaveStatusText');
+  if (statusIcon && statusText) {
+    statusIcon.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+    statusText.textContent = 'Changes Saved to Record';
+    statusText.style.color = '#047857';
+  }
+
+  alert(`Student Profile Updated Successfully\n\nFull Name: ${profile.name}\nResidential Address: ${profile.address}\n\nYour institutional records and e-ID card have been updated.`);
 }
 
-// DOB Entry & Confirmation Modal System
+// DOB Entry & Confirmation Modal System (Preserves currently typed name & address)
 let tempSelectedDob = '';
 
 function initiateDobLockPrompt() {
@@ -1974,6 +2019,13 @@ function closeDobConfirmModal() {
 function confirmAndLockDob() {
   if (!tempSelectedDob) return;
   const profile = getStudentProfile();
+
+  // Preserve any currently typed name or address before locking
+  const nameInput = document.getElementById('studentNameInput');
+  const addressInput = document.getElementById('studentAddressInput');
+  if (nameInput && nameInput.value.trim()) profile.name = nameInput.value.trim();
+  if (addressInput && addressInput.value.trim()) profile.address = addressInput.value.trim();
+
   profile.dob = tempSelectedDob;
   profile.dobLocked = true;
   profile.dobLockedDate = formatDobDisplay(tempSelectedDob);
@@ -1981,7 +2033,7 @@ function confirmAndLockDob() {
   saveStudentProfile(profile);
   closeDobConfirmModal();
 
-  alert(`Date of Birth Permanently Locked!\n\nYour official Date of Birth is now recorded as: ${formatDobDisplay(tempSelectedDob)} (${calculateAgeYears(tempSelectedDob)}).\n\nAs per university regulations, this date is locked. Any future changes require formal Faculty Administration approval.`);
+  alert(`Date of Birth Permanently Locked\n\nYour official Date of Birth is now recorded as: ${formatDobDisplay(tempSelectedDob)} (${calculateAgeYears(tempSelectedDob)}).\n\nAs per university regulations, this date is locked. Any future modifications require formal Faculty Administration approval.`);
   updateStudentSidebarWidgets();
 }
 
@@ -2037,7 +2089,7 @@ function handleDobCorrectionRequestSubmit(e) {
   list.unshift(newReq);
   saveDobCorrectionRequests(list);
 
-  alert(`DOB Correction Request Forwarded to Faculty!\n\nRequested Date: ${formatDobDisplay(reqDob)}\nCustom Explanation: "${msg}"\n\nYour Department Head and Faculty Administration have been notified for review.`);
+  alert(`DOB Correction Request Forwarded to Faculty\n\nRequested Date: ${formatDobDisplay(reqDob)}\nCustom Explanation: "${msg}"\n\nYour Department Head and Faculty Administration have been notified for review.`);
   closeRequestDobChangeModal();
   document.getElementById('dobCorrectionForm').reset();
   updateStudentSidebarWidgets();
@@ -2151,7 +2203,7 @@ function renderAttendanceLeaderboard() {
       const init2 = top2.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       podiumHtml += `
         <div class="podium-card rank-2">
-          <span class="podium-rank-badge">🥈 Rank #2</span>
+          <span class="podium-rank-badge">Rank 2</span>
           <div class="podium-avatar">${init2}</div>
           <div class="podium-name">${top2.name}</div>
           <div class="podium-roll">${top2.roll} • ${top2.course.split('>')[0].trim()}</div>
@@ -2168,7 +2220,7 @@ function renderAttendanceLeaderboard() {
       const init1 = top1.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       podiumHtml += `
         <div class="podium-card rank-1">
-          <span class="podium-rank-badge">🥇 Rank #1</span>
+          <span class="podium-rank-badge">Rank 1</span>
           <div class="podium-avatar">${init1}</div>
           <div class="podium-name">${top1.name}</div>
           <div class="podium-roll">${top1.roll} • ${top1.course.split('>')[0].trim()}</div>
@@ -2183,7 +2235,7 @@ function renderAttendanceLeaderboard() {
       const init3 = top3.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
       podiumHtml += `
         <div class="podium-card rank-3">
-          <span class="podium-rank-badge">🥉 Rank #3</span>
+          <span class="podium-rank-badge">Rank 3</span>
           <div class="podium-avatar">${init3}</div>
           <div class="podium-name">${top3.name}</div>
           <div class="podium-roll">${top3.roll} • ${top3.course.split('>')[0].trim()}</div>
@@ -2251,15 +2303,15 @@ const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "Ju
 
 const INDIA_ACADEMIC_HOLIDAYS = [
   { month: 0, day: 26, title: "Republic Day", type: "national", typeLabel: "National Holiday", reason: "Government of India Gazetted National Celebration" },
-  { month: 2, day: 8, title: "Maha Shivratri", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious & Cultural Observance" },
+  { month: 2, day: 8, title: "Maha Shivratri", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious and Cultural Observance" },
   { month: 2, day: 25, title: "Holi (Festival of Colours)", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Festival Holiday" },
   { month: 2, day: 29, title: "Good Friday", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Government Holiday" },
   { month: 3, day: 11, title: "Eid-ul-Fitr (Ramadan Eid)", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted National Religious Holiday" },
-  { month: 3, day: 21, title: "Mahavir Jayanti", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious & Cultural Holiday" },
+  { month: 3, day: 21, title: "Mahavir Jayanti", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious and Cultural Holiday" },
   { month: 4, day: 23, title: "Buddha Purnima", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Buddhist Observance" },
   { month: 5, day: 17, title: "Bakrid / Eid al-Adha", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious Observance" },
   { month: 6, day: 17, title: "Muharram", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious Holiday" },
-  { month: 7, day: 15, title: "Independence Day", type: "national", typeLabel: "National Holiday", reason: "77th Indian Independence Day Celebration" },
+  { month: 7, day: 15, title: "Independence Day", type: "national", typeLabel: "National Holiday", reason: "Indian Independence Day Celebration" },
   { month: 7, day: 19, title: "Raksha Bandhan", type: "institutional", typeLabel: "Institutional College Holiday", reason: "University Declared Cultural Festival Break" },
   { month: 7, day: 26, title: "Janmashtami", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Krishna Janmashtami Celebration" },
   { month: 8, day: 16, title: "Milad-un-Nabi (Eid-e-Milad)", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious Holiday" },
@@ -2276,9 +2328,7 @@ function getCompensatorySessions() {
   if (stored) {
     try { return JSON.parse(stored); } catch(e) {}
   }
-  return [
-    { year: 2024, month: 4, day: 28, subject: "Data Structures & Algorithms", time: "09:00 AM - 11:00 AM | Lecture Hall 2", reason: "Compensatory lecture for gazetted holiday adjustments" }
-  ];
+  return [];
 }
 
 function saveCompensatorySessions(list) {
@@ -2415,9 +2465,9 @@ function renderSelectedDateEvents() {
       <div class="result-card" style="border-left: 4px solid #16a34a; background: rgba(220, 252, 231, 0.4);">
         <p class="result-term">${comp.subject}</p>
         <div style="margin: 6px 0;">
-          <span class="holiday-type-tag compensatory">📚 Compensatory Session</span>
+          <span class="holiday-type-tag compensatory">Compensatory Session</span>
         </div>
-        <p class="section-sub" style="color: var(--ink-700);"><strong>Timing & Room:</strong> ${comp.time}</p>
+        <p class="section-sub" style="color: var(--ink-700);"><strong>Timing and Room:</strong> ${comp.time}</p>
         <p class="section-sub" style="margin-top: 4px;"><strong>Reason:</strong> ${comp.reason}</p>
       </div>
     `;
@@ -2425,14 +2475,8 @@ function renderSelectedDateEvents() {
     if (subtitleEl) subtitleEl.textContent = 'Regular Academic Schedule';
     container.innerHTML = `
       <div class="result-card">
-        <p class="result-term">Data Structures & Algorithms</p>
-        <p class="section-sub">09:00 AM - 10:30 AM | Lab Room 402</p>
-        <span class="crumb-badge" style="font-size: 10.5px; margin-top: 4px;">Department Faculty In-Charge</span>
-      </div>
-      <div class="result-card">
-        <p class="result-term">Database Management Systems</p>
-        <p class="section-sub">11:00 AM - 12:30 PM | Lecture Hall 3</p>
-        <span class="crumb-badge" style="font-size: 10.5px; margin-top: 4px;">Course Faculty</span>
+        <p class="result-term">Academic Timetable</p>
+        <p class="section-sub">Lectures and tutorial sessions are active as per department schedule.</p>
       </div>
     `;
   }
@@ -2474,7 +2518,7 @@ function handleCompensatoryFormSubmit(e) {
   list.push({ year, month, day, subject, time, reason });
   saveCompensatorySessions(list);
 
-  alert(`Compensatory Class Scheduled!\n\n${subject} scheduled on ${day} ${MONTH_NAMES[month]} ${year}.`);
+  alert(`Compensatory Class Scheduled\n\n${subject} scheduled on ${day} ${MONTH_NAMES[month]} ${year}.`);
   closeCompensatoryModal();
   renderInbuiltCalendar();
 }
@@ -2487,87 +2531,13 @@ renderInbuiltCalendar();
    OFFICIAL NOTICES & DISCUSSION FORUM ENGINE (notices.html)
    ========================================================== */
 
-const defaultAnnouncements = [
-  {
-    id: "N-101",
-    title: "Official Notification: Mid-Term Examination Schedule Released",
-    category: "exam",
-    categoryLabel: "Exam & Evaluation",
-    priority: "important",
-    author: "Controller of Examinations",
-    date: "06 May 2024",
-    content: "All FYJC and Degree students are hereby informed that Semester Mid-Term evaluations will commence from June 10, 2024. Official hall tickets and seating matrices will be distributed through the portal.",
-    pinned: true
-  },
-  {
-    id: "N-102",
-    title: "Gazetted Holiday Notice: Buddha Purnima Campus Closure",
-    category: "circular",
-    categoryLabel: "Official Circular",
-    priority: "general",
-    author: "Registrar / Academic Office",
-    date: "05 May 2024",
-    content: "In observance of Buddha Purnima, all undergraduate and postgraduate lectures, practical labs, and administrative operations will remain suspended on May 23, 2024.",
-    pinned: false
-  },
-  {
-    id: "N-103",
-    title: "Urgent: Verification of 75% Minimum Attendance Criteria",
-    category: "academic",
-    categoryLabel: "Academic Schedule",
-    priority: "urgent",
-    author: "Dean of Academic Affairs",
-    date: "03 May 2024",
-    content: "Students with attendance falling below the mandated 75% threshold are directed to submit genuine institutional leave applications to their respective Department Heads immediately.",
-    pinned: true
-  }
-];
-
-const defaultDiscussionThreads = [
-  {
-    id: "D-201",
-    topic: "Clarification on Data Structures Lab 4 (Binary Search Tree Traversal)",
-    author: "Student Council Academic Representative",
-    authorRole: "Student (Degree CS)",
-    date: "06 May 2024",
-    content: "Could the faculty please clarify whether AVL tree rotations are required in the submission for Lab 4 or only standard BST insertion/deletion?",
-    replies: [
-      {
-        id: "R-1",
-        author: "Department Head / Course Faculty",
-        authorRole: "Faculty In-Charge",
-        isFaculty: true,
-        date: "06 May 2024, 02:15 PM",
-        text: "Standard BST insertion and in-order traversal are compulsory for Lab 4. AVL balancing will be evaluated in Lab 5."
-      }
-    ]
-  },
-  {
-    id: "D-202",
-    topic: "Library Digital Resource Portal Access Timings",
-    author: "Student Portal Member",
-    authorRole: "Student",
-    date: "04 May 2024",
-    content: "Is remote off-campus access to the IEEE journal database active during gazetted holidays?",
-    replies: [
-      {
-        id: "R-2",
-        author: "Central Library & Information Cell",
-        authorRole: "Faculty / Administration",
-        isFaculty: true,
-        date: "04 May 2024, 05:30 PM",
-        text: "Yes, the institutional proxy allows 24/7 access with your student roll credentials even during public holidays."
-      }
-    ]
-  }
-];
-
 function getAnnouncementsList() {
   const stored = localStorage.getItem('Ad-Reg_announcements');
   if (stored) {
     try { return JSON.parse(stored); } catch(e) {}
   }
-  return defaultAnnouncements;
+  // Default: Empty baseline
+  return [];
 }
 
 function saveAnnouncementsList(list) {
@@ -2579,7 +2549,8 @@ function getDiscussionThreads() {
   if (stored) {
     try { return JSON.parse(stored); } catch(e) {}
   }
-  return defaultDiscussionThreads;
+  // Default: Empty baseline
+  return [];
 }
 
 function saveDiscussionThreads(list) {
@@ -2637,8 +2608,10 @@ function renderAnnouncementsFeed() {
 
   if (filtered.length === 0) {
     container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: var(--ink-500); background: rgba(255,255,255,0.7); border-radius: var(--radius-md); border: 1px dashed var(--border);">
-        <p style="font-weight: 600;">No notices found matching your filter criteria.</p>
+      <div style="text-align: center; padding: 48px 20px; color: var(--ink-500); background: rgba(255,255,255,0.7); border-radius: var(--radius-md); border: 1px dashed var(--border);">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--ink-400)" stroke-width="1.8" style="margin-bottom: 8px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <p style="font-weight: 700; font-size: 14px; color: var(--ink-700); margin-bottom: 4px;">No official notices or circulars posted yet.</p>
+        <p style="font-size: 12px; color: var(--ink-500); max-width: 380px; margin: 0 auto; line-height: 1.4;">Official university circulars and examination notifications published by faculty administration will be displayed here.</p>
       </div>
     `;
     return;
@@ -2667,7 +2640,7 @@ function renderAnnouncementsFeed() {
         <div class="notice-meta">
           <span><strong>Issued by:</strong> ${n.author}</span>
           <span>•</span>
-          <span>📅 ${n.date}</span>
+          <span>Date: ${n.date}</span>
         </div>
         <div class="notice-body">
           ${n.content}
@@ -2688,8 +2661,10 @@ function renderDiscussionThreads() {
 
   if (threads.length === 0) {
     container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: var(--ink-500); background: rgba(255,255,255,0.7); border-radius: var(--radius-md); border: 1px dashed var(--border);">
-        <p style="font-weight: 600;">No discussion threads yet. Click "+ Start Discussion" to ask a question.</p>
+      <div style="text-align: center; padding: 48px 20px; color: var(--ink-500); background: rgba(255,255,255,0.7); border-radius: var(--radius-md); border: 1px dashed var(--border);">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--ink-400)" stroke-width="1.8" style="margin-bottom: 8px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <p style="font-weight: 700; font-size: 14px; color: var(--ink-700); margin-bottom: 4px;">No discussion threads started yet.</p>
+        <p style="font-size: 12px; color: var(--ink-500); max-width: 380px; margin: 0 auto; line-height: 1.4;">Click "+ Start Discussion" to create an academic query or start a topic for faculty and students.</p>
       </div>
     `;
     return;
@@ -2707,11 +2682,13 @@ function renderDiscussionThreads() {
       </div>
     `).join('');
 
+    const authorInitials = (t.author || 'ST').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
     return `
       <div class="discussion-card">
         <div class="discussion-header">
           <div class="discussion-author">
-            <div class="avatar-circle" style="width: 36px; height: 36px; font-size: 13px;">${t.author.substring(0, 2).toUpperCase()}</div>
+            <div class="avatar-circle" style="width: 36px; height: 36px; font-size: 13px;">${authorInitials}</div>
             <div>
               <div class="discussion-author-name">${t.author}</div>
               <div class="discussion-author-role">${t.authorRole} • ${t.date}</div>
@@ -2757,7 +2734,7 @@ function handlePostNoticeSubmit(e) {
 
   const catLabels = {
     circular: "Official Circular",
-    exam: "Exam & Evaluation",
+    exam: "Exam and Evaluation",
     academic: "Academic Schedule",
     event: "Campus Event"
   };
@@ -2781,7 +2758,7 @@ function handlePostNoticeSubmit(e) {
   list.unshift(newNotice);
   saveAnnouncementsList(list);
 
-  alert(`Announcement Published Successfully!\n\n"${title}" has been broadcast to the college portal.`);
+  alert(`Announcement Published Successfully\n\n"${title}" has been broadcast to the college portal.`);
   closePostNoticeModal();
   document.getElementById('postNoticeForm').reset();
   renderAnnouncementsFeed();
@@ -2821,7 +2798,7 @@ function handleStartDiscussionSubmit(e) {
   threads.unshift(newThread);
   saveDiscussionThreads(threads);
 
-  alert(`Discussion Topic Created!\n\nYour topic "${topic}" is now open for faculty and student responses.`);
+  alert(`Discussion Topic Created\n\nYour topic "${topic}" is now open for faculty and student responses.`);
   closeStartDiscussionModal();
   document.getElementById('startDiscussionForm').reset();
   renderDiscussionThreads();
@@ -2842,8 +2819,8 @@ function addDiscussionReply(threadId) {
 
     thread.replies.push({
       id: 'R-' + Math.floor(100 + Math.random() * 900),
-      author: "Verified User / Faculty",
-      authorRole: "Academic Member",
+      author: "Verified Academic Member",
+      authorRole: "Faculty / Student",
       isFaculty: true,
       date: dateStr,
       text
@@ -2862,7 +2839,3 @@ if (noticeSearchInput) {
 // Initial Notice & Discussion Render
 renderAnnouncementsFeed();
 renderDiscussionThreads();
-
-
-
-

@@ -17,7 +17,7 @@
     <!-- Left: Rectangular Profile Badge with Snug Floating Dropdown -->
     <div class="student-profile-dropdown-wrapper" id="profileDropdownWrapper">
       <div class="student-profile-header-card" onclick="toggleStudentNavDropdown(event)" title="Click to Open Menu Navigation">
-        <div class="avatar-circle">—</div>
+        <div class="avatar-circle">ST</div>
         <div class="profile-card-text">
           <div class="profile-card-name" id="studentSidebarName">—</div>
           <div class="profile-card-meta" id="studentSidebarMeta">—</div>
@@ -102,18 +102,18 @@
       <p class="welcome-line">Official college circulars, exam schedules, and student-faculty communication forum</p>
     </div>
     <div style="display: flex; gap: 10px; align-items: center;">
-      <button class="btn-primary-action" id="openPostNoticeModalBtn" onclick="openPostNoticeModal()">+ Post Announcement</button>
-      <button class="btn-secondary" id="openStartDiscussionBtn" onclick="openStartDiscussionModal()">+ Start Discussion</button>
+      <span class="crumb-badge" style="font-size: 12px; padding: 6px 14px;">Faculty Published Circulars</span>
+      <button class="btn-primary-action" id="openStartDiscussionBtn" onclick="openStartDiscussionModal()">+ Start Discussion</button>
     </div>
   </div>
 
   <!-- Tab Navigation -->
   <div class="tab-nav">
     <button class="tab-btn active" id="tabNoticesBtn" onclick="switchNoticeTab('notices')">
-      📢 Official Notices & Circulars (<span id="noticesCountBadge">0</span>)
+      Official Notices & Circulars (<span id="noticesCountBadge">0</span>)
     </button>
     <button class="tab-btn" id="tabDiscussionBtn" onclick="switchNoticeTab('discussion')">
-      💬 Student-Teacher Discussion Forum (<span id="discussionCountBadge">0</span>)
+      Student-Teacher Discussion Forum (<span id="discussionCountBadge">0</span>)
     </button>
   </div>
 
@@ -126,14 +126,14 @@
       </div>
 
       <div class="toolbar-filters" style="display: flex; gap: 10px;">
-        <select id="noticeCategoryFilter" class="select-pill" onchange="renderAnnouncementsFeed()">
+        <select id="noticeCategoryFilter" class="select-pill" onchange="renderAnnouncementsFeed()" aria-label="Filter by Category">
           <option value="all" selected>All Categories</option>
           <option value="circular">Official Circular</option>
           <option value="exam">Exam & Evaluation</option>
           <option value="academic">Academic Schedule</option>
           <option value="event">Campus Event</option>
         </select>
-        <select id="noticePriorityFilter" class="select-pill" onchange="renderAnnouncementsFeed()">
+        <select id="noticePriorityFilter" class="select-pill" onchange="renderAnnouncementsFeed()" aria-label="Filter by Priority">
           <option value="all" selected>All Priorities</option>
           <option value="urgent">Urgent</option>
           <option value="important">Important</option>
@@ -157,52 +157,6 @@
 
 </div> <!-- .student-portal-shell -->
 
-<!-- Modal: Post Official Announcement -->
-<div class="modal-overlay" id="postNoticeModalOverlay">
-  <div class="modal-card">
-    <div class="modal-header">
-      <div>
-        <h3>Post Official College Announcement</h3>
-        <p class="modal-sub">Broadcast circulars or schedule updates to students & faculty</p>
-      </div>
-      <button class="modal-close" type="button" onclick="closePostNoticeModal()">&times;</button>
-    </div>
-    <form id="postNoticeForm" onsubmit="handlePostNoticeSubmit(event)">
-      <div class="modal-body">
-        <div class="modal-field">
-          <label for="noticeTitleInput">Announcement Title</label>
-          <input type="text" id="noticeTitleInput" placeholder="e.g. Mid-Term Examination Schedule Notification" required>
-        </div>
-        <div class="modal-field">
-          <label for="noticeCategorySelect">Notice Category</label>
-          <select id="noticeCategorySelect" class="modal-select">
-            <option value="circular">Official Circular</option>
-            <option value="exam">Exam & Evaluation</option>
-            <option value="academic">Academic Schedule</option>
-            <option value="event">Campus Event</option>
-          </select>
-        </div>
-        <div class="modal-field">
-          <label for="noticePrioritySelect">Priority Level</label>
-          <select id="noticePrioritySelect" class="modal-select">
-            <option value="general" selected>General Notice</option>
-            <option value="important">Important Notice</option>
-            <option value="urgent">Urgent Notice</option>
-          </select>
-        </div>
-        <div class="modal-field">
-          <label for="noticeContentInput">Announcement Details</label>
-          <textarea id="noticeContentInput" rows="4" style="width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; font-family: inherit; font-size: 13.5px;" placeholder="Enter complete notice information..." required></textarea>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-secondary" onclick="closePostNoticeModal()">Cancel</button>
-        <button type="submit" class="btn-primary">Publish Announcement</button>
-      </div>
-    </form>
-  </div>
-</div>
-
 <!-- Modal: Start New Discussion Topic -->
 <div class="modal-overlay" id="startDiscussionModalOverlay">
   <div class="modal-card">
@@ -217,7 +171,7 @@
       <div class="modal-body">
         <div class="modal-field">
           <label for="discTopicInput">Discussion Subject / Topic</label>
-          <input type="text" id="discTopicInput" placeholder="e.g. Query regarding Lab 4 Assignment Submission" required>
+          <input type="text" id="discTopicInput" placeholder="e.g. Query regarding Lab Assignment Submission" required>
         </div>
         <div class="modal-field">
           <label for="discContentInput">Message Content</label>

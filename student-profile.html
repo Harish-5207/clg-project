@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Portal — Profile & Personalization</title>
+<title>Student Portal — Profile & Identity</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -17,7 +17,7 @@
     <!-- Left: Rectangular Profile Badge with Snug Floating Dropdown -->
     <div class="student-profile-dropdown-wrapper" id="profileDropdownWrapper">
       <div class="student-profile-header-card" onclick="toggleStudentNavDropdown(event)" title="Click to Open Menu Navigation">
-        <div class="avatar-circle">—</div>
+        <div class="avatar-circle">ST</div>
         <div class="profile-card-text">
           <div class="profile-card-name" id="studentSidebarName">—</div>
           <div class="profile-card-meta" id="studentSidebarMeta">—</div>
@@ -98,61 +98,123 @@
   <!-- Welcome Header Banner -->
   <div class="portal-welcome-banner">
     <div>
-      <h2>Student Profile & Verified Records</h2>
-      <p class="welcome-line">Manage your personal contact details, residential address, and verified academic identity</p>
+      <h2>Student Profile & Institutional Records</h2>
+      <p class="welcome-line">Official electronic student identity, residential contact details, and verified university records</p>
     </div>
   </div>
 
   <!-- Main Profile Layout Grid -->
-  <div style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-top: 8px;">
+  <div style="display: grid; grid-template-columns: 360px 1fr; gap: 24px; margin-top: 8px; align-items: start;">
     
-    <!-- Left: Student Identity Card -->
-    <section class="panel" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 16px;">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <h3>Student Identity Card</h3>
-      </div>
+    <!-- Left: Official Electronic Student ID (e-ID Card) -->
+    <div style="display: flex; flex-direction: column; gap: 16px;">
       
-      <div style="position: relative; width: 120px; height: 120px;">
-        <div id="profilePhotoContainer" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-600), var(--blue-800)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; overflow: hidden; border: 3px solid var(--white); box-shadow: var(--shadow-card);">
-          <span id="profileInitials">—</span>
-          <img id="profileImagePreview" src="" alt="Profile Photo" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+      <div class="eid-card-container">
+        <!-- e-ID Card Header -->
+        <div class="eid-header">
+          <div class="eid-brand">
+            <div class="eid-logo-crest">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            </div>
+            <div class="eid-title-wrap">
+              <h4>Ad-Reg Institute</h4>
+              <span>Student Electronic ID</span>
+            </div>
+          </div>
+
+          <div class="eid-chip-wrap">
+            <div class="eid-chip"></div>
+          </div>
+        </div>
+
+        <!-- e-ID Card Body -->
+        <div class="eid-body">
+          <div class="eid-photo-box">
+            <span id="eidProfileInitials" style="font-size: 26px; font-weight: 800; color: #94a3b8;">HP</span>
+            <img id="profileImagePreview" src="" alt="Student Photo" style="display: none;">
+          </div>
+
+          <div class="eid-info-grid">
+            <div class="eid-field">
+              <span class="eid-label">Full Name</span>
+              <span class="eid-value accent" id="eidStudentName">Harish Prajapati</span>
+            </div>
+
+            <div class="eid-field">
+              <span class="eid-label">Roll Number / Student ID</span>
+              <span class="eid-value" id="eidStudentRoll">STU-2024-001</span>
+            </div>
+
+            <div class="eid-field">
+              <span class="eid-label">Department / Program</span>
+              <span class="eid-value" id="eidStudentDept">B.Tech CS 2nd Year</span>
+            </div>
+
+            <div class="eid-field">
+              <span class="eid-label">Date of Birth</span>
+              <span class="eid-value" id="eidStudentDob">12 May 2004</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- e-ID Card Footer -->
+        <div class="eid-footer">
+          <div>
+            <div style="font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 700;">Institutional Email</div>
+            <div style="font-size: 11px; color: #e2e8f0; font-weight: 600;" id="eidStudentEmail">student@college.edu</div>
+          </div>
+
+          <!-- Barcode Pattern -->
+          <div class="eid-barcode" title="Encrypted Student UID">
+            <div class="eid-bar" style="width: 2px;"></div>
+            <div class="eid-bar" style="width: 4px;"></div>
+            <div class="eid-bar" style="width: 1px;"></div>
+            <div class="eid-bar" style="width: 3px;"></div>
+            <div class="eid-bar" style="width: 2px;"></div>
+            <div class="eid-bar" style="width: 5px;"></div>
+            <div class="eid-bar" style="width: 2px;"></div>
+            <div class="eid-bar" style="width: 3px;"></div>
+            <div class="eid-bar" style="width: 1px;"></div>
+            <div class="eid-bar" style="width: 4px;"></div>
+            <div class="eid-bar" style="width: 2px;"></div>
+          </div>
         </div>
       </div>
 
-      <div style="padding: 6px 14px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        <span style="font-size: 11.5px; font-weight: 700; color: #047857;">Verified Student Identity</span>
-      </div>
-
-      <!-- Quick Identity Badges -->
-      <div style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
-        <div style="padding: 12px; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border); border-radius: 8px; text-align: left;">
-          <div style="font-size: 11px; font-weight: 600; color: var(--ink-500); text-transform: uppercase;">Official ID / Roll</div>
-          <div style="font-size: 14px; font-weight: 700; color: var(--blue-700); margin-top: 2px;" id="studentCardRoll">—</div>
+      <!-- Photo Upload Actions Panel -->
+      <section class="panel" style="padding: 16px; text-align: center;">
+        <div style="font-size: 13px; font-weight: 700; color: var(--ink-900); margin-bottom: 6px;">Profile Photo Management</div>
+        <p style="font-size: 11.5px; color: var(--ink-500); margin-bottom: 12px;">Upload a formal passport-size photo to update your e-ID Card</p>
+        <div style="display: flex; gap: 8px; justify-content: center;">
+          <label for="profilePhotoInput" class="btn-primary-action" style="font-size: 12px; padding: 7px 16px; cursor: pointer;">
+            Upload New Photo
+          </label>
+          <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
+          <button type="button" class="btn-secondary" style="font-size: 12px; padding: 7px 14px;" onclick="removeProfilePhoto()">
+            Remove
+          </button>
         </div>
+      </section>
 
-        <div style="padding: 12px; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border); border-radius: 8px; text-align: left;">
-          <div style="font-size: 11px; font-weight: 600; color: var(--ink-500); text-transform: uppercase;">Academic Standing</div>
-          <div style="font-size: 13.5px; font-weight: 700; color: #10b981; margin-top: 2px;">Active / Good Standing</div>
-        </div>
-
-        <div style="padding: 12px; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--border); border-radius: 8px; text-align: left;">
-          <div style="font-size: 11px; font-weight: 600; color: var(--ink-500); text-transform: uppercase;">Assigned Advisor</div>
-          <div style="font-size: 13px; font-weight: 600; color: var(--ink-800); margin-top: 2px;">Department Head (HOD)</div>
-        </div>
-      </div>
-    </section>
+    </div>
 
     <!-- Right: Student Profile Form (Editable Name & Address + Locked DOB) -->
     <section class="panel">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(226, 232, 240, 0.8);">
-        <div>
-          <h3>Personal Details & Official Credentials</h3>
-          <p class="section-sub" style="margin-top: 2px;">Name and address are editable; institutional records & locked date of birth require faculty approval</p>
+      
+      <!-- Save Status Indicator Bar -->
+      <div class="profile-save-status-bar">
+        <div class="save-status-indicator">
+          <span id="profileSaveStatusIcon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span id="profileSaveStatusText" style="color: #047857;">All records synchronized with database</span>
         </div>
-        <span class="status-badge active" style="font-size: 12px; padding: 6px 12px;">
-          Student Self-Service Enabled
-        </span>
+        <span class="crumb-badge" style="font-size: 11px;">Restricted Student Self-Service</span>
+      </div>
+
+      <div style="margin-bottom: 18px;">
+        <h3>Personal Details & Official Credentials</h3>
+        <p class="section-sub" style="margin-top: 2px;">Full name and residential address can be edited; institutional records & locked date of birth require faculty approval</p>
       </div>
 
       <form id="studentProfileForm" onsubmit="handleStudentProfileSave(event)">
@@ -164,29 +226,32 @@
             <label for="studentNameInput">
               Full Legal Name <span style="color: #ef4444;">*</span>
             </label>
-            <input type="text" id="studentNameInput" class="modal-select" placeholder="Enter full legal name" required>
-            <span class="editable-field-hint">✏️ Editable Field</span>
+            <input type="text" id="studentNameInput" class="modal-select" placeholder="Enter full legal name" oninput="markProfileFieldModified(this)" required>
+            <span class="editable-field-hint">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Editable Field
+            </span>
           </div>
 
           <!-- READONLY: Roll Number -->
           <div class="modal-field">
             <label for="studentRollInput">Roll Number / Student ID (Permanent)</label>
             <input type="text" id="studentRollInput" class="modal-select profile-field-readonly" readonly>
-            <span style="font-size: 11px; color: var(--ink-500); margin-top: 4px;">🔒 Institutional Permanent ID</span>
+            <span style="font-size: 11px; color: var(--ink-500); margin-top: 4px;">Institutional Permanent ID</span>
           </div>
 
           <!-- READONLY: Department / Faction -->
           <div class="modal-field">
             <label for="studentFactionInput">Enrolled Department & Faction</label>
             <input type="text" id="studentFactionInput" class="modal-select profile-field-readonly" readonly>
-            <span style="font-size: 11px; color: var(--ink-500); margin-top: 4px;">🔒 Assigned by Registrar Office</span>
+            <span style="font-size: 11px; color: var(--ink-500); margin-top: 4px;">Assigned by Registrar Office</span>
           </div>
 
           <!-- READONLY: Email -->
           <div class="modal-field">
             <label for="studentEmailInput">Official College Email</label>
             <input type="email" id="studentEmailInput" class="modal-select profile-field-readonly" readonly>
-            <span style="font-size: 11px; color: var(--ink-500); margin-top: 4px;">🔒 Institutional Google Workspace Account</span>
+            <span style="font-size: 11px; color: var(--ink-500); margin-top: 4px;">Institutional Google Workspace Account</span>
           </div>
 
         </div>
@@ -194,7 +259,7 @@
         <!-- DATE OF BIRTH ENTRY & PERMANENT LOCKING SECTION -->
         <div style="margin-top: 20px;">
           <label style="font-size: 13.5px; font-weight: 700; color: var(--ink-900);">
-            Date of Birth (Official Verification)
+            Date of Birth (Official Institutional Verification)
           </label>
 
           <!-- Case A & B Container dynamically populated via JS -->
@@ -203,7 +268,7 @@
             <!-- When DOB is NOT yet locked -->
             <div id="dobUnsetWrapper" style="display: none;">
               <p style="font-size: 12.5px; color: var(--ink-700); margin-bottom: 10px;">
-                Select your official Date of Birth as printed on your Secondary School / Birth Certificate. Once set, this date is permanently locked.
+                Select your official Date of Birth as printed on your Secondary School / Birth Certificate. Once confirmed, this date is permanently locked.
               </p>
               <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                 <input type="date" id="studentDobPicker" class="modal-select" style="max-width: 240px;" max="2015-12-31">
@@ -217,19 +282,19 @@
             <div id="dobLockedWrapper" style="display: none;">
               <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <span class="dob-lock-badge">🔒 Permanent Official DOB (Locked)</span>
+                  <span class="dob-lock-badge">Permanent Official DOB (Locked)</span>
                   <strong style="font-size: 16px; color: var(--ink-900);" id="lockedDobDisplay">12 May 2004</strong>
                   <span style="font-size: 12.5px; color: var(--ink-500);" id="lockedDobAgeDisplay">(Age: 20 Years)</span>
                 </div>
 
                 <button type="button" class="btn-secondary" style="font-size: 12px; padding: 6px 14px;" onclick="openRequestDobChangeModal()">
-                  Request Faculty DOB Correction 📝
+                  Request Faculty DOB Correction
                 </button>
               </div>
 
               <!-- Pending Request Notice Banner (if applicable) -->
               <div id="dobPendingRequestBanner" style="display: none; margin-top: 12px; padding: 10px 14px; background: #fef3c7; border: 1px solid #fde68a; border-radius: var(--radius-sm); font-size: 12px; color: #92400e;">
-                ⏳ <strong>DOB Correction Pending Faculty Approval:</strong> You submitted a request to change DOB to <strong id="pendingDobVal">—</strong>.
+                <strong>DOB Correction Pending Faculty Approval:</strong> You submitted a request to change DOB to <strong id="pendingDobVal">—</strong>.
               </div>
             </div>
 
@@ -241,16 +306,20 @@
           <label for="studentAddressInput">
             Permanent & Residential Address <span style="color: #ef4444;">*</span>
           </label>
-          <textarea id="studentAddressInput" rows="3" class="modal-select" style="width: 100%; resize: vertical;" placeholder="Enter complete residential address, flat/house number, city, and postal code..." required></textarea>
-          <span class="editable-field-hint">✏️ Editable Field — Keep updated for official mail & university records</span>
+          <textarea id="studentAddressInput" rows="3" class="modal-select" style="width: 100%; resize: vertical;" placeholder="Enter complete residential address, flat/house number, city, and postal code..." oninput="markProfileFieldModified(this)" required></textarea>
+          <span class="editable-field-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Editable Field — Keep updated for official postal communications and records
+          </span>
         </div>
 
         <!-- Save Profile Changes Button -->
         <div style="margin-top: 24px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); padding-top: 18px;">
           <div style="font-size: 12px; color: var(--ink-500);">
-            Modifications to Name and Address reflect immediately across your attendance records and profile identity.
+            Modifications to Name and Address reflect immediately on your e-ID Card and records.
           </div>
-          <button type="submit" class="btn-primary-action" style="padding: 10px 24px; font-size: 14px;">
+          <button type="submit" class="btn-primary-action" style="padding: 10px 24px; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Save Profile Changes
           </button>
         </div>
@@ -267,7 +336,7 @@
   <div class="modal-card" style="max-width: 500px;">
     <div class="modal-header">
       <div style="display: flex; align-items: center; gap: 8px;">
-        <span style="font-size: 20px;">⚠️</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         <div>
           <h3>Confirm & Permanently Lock Date of Birth</h3>
           <p class="modal-sub">Mandatory verification for permanent academic record</p>
@@ -346,7 +415,7 @@
         </div>
 
         <div style="font-size: 11.5px; color: var(--ink-500); line-height: 1.4;">
-          ⚠️ Your custom explanation will be directly submitted to the Faculty Administration and Department Head for verification.
+          Your custom explanation will be directly submitted to the Faculty Administration and Department Head for verification.
         </div>
 
       </div>

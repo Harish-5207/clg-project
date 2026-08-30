@@ -17,7 +17,7 @@
     <!-- Left: Rectangular Profile Badge with Snug Floating Dropdown -->
     <div class="student-profile-dropdown-wrapper" id="profileDropdownWrapper">
       <div class="student-profile-header-card" onclick="toggleStudentNavDropdown(event)" title="Click to Open Menu Navigation">
-        <div class="avatar-circle">—</div>
+        <div class="avatar-circle">ST</div>
         <div class="profile-card-text">
           <div class="profile-card-name" id="studentSidebarName">—</div>
           <div class="profile-card-meta" id="studentSidebarMeta">—</div>
@@ -99,21 +99,21 @@
   <div class="portal-welcome-banner">
     <div>
       <h2>Official Academic & India Regional Holiday Calendar</h2>
-      <p class="welcome-line">Interactive national holidays, gazetted government leaves, and compensatory lecture days</p>
+      <p class="welcome-line">Interactive national holidays, gazetted government leaves, and university academic schedule</p>
     </div>
     <div style="display: flex; gap: 10px; align-items: center;">
       <button class="btn-secondary" onclick="jumpToTodayCalendar()">Jump to Today</button>
-      <button class="btn-primary-action" id="openCompensatoryModalBtn" onclick="openCompensatoryModal()">+ Mark Compensatory Class</button>
+      <span class="crumb-badge" style="font-size: 12px; padding: 6px 14px;">View-Only Student Schedule</span>
     </div>
   </div>
 
   <!-- Holiday Categories / Legend Badges -->
   <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding: 12px 16px; background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(226, 232, 240, 0.9); border-radius: var(--radius-md);">
     <span style="font-size: 12px; font-weight: 700; color: var(--ink-700); margin-right: 4px; align-self: center;">Holiday Legend:</span>
-    <span class="holiday-type-tag national">🇮🇳 National Holiday</span>
-    <span class="holiday-type-tag gazetted">🏛️ Government Gazetted Holiday</span>
-    <span class="holiday-type-tag institutional">🏫 Institutional Break / Recess</span>
-    <span class="holiday-type-tag compensatory">📚 Compensatory Working Session</span>
+    <span class="holiday-type-tag national">National Holiday</span>
+    <span class="holiday-type-tag gazetted">Government Gazetted Holiday</span>
+    <span class="holiday-type-tag institutional">Institutional Break / Recess</span>
+    <span class="holiday-type-tag compensatory">Compensatory Working Session</span>
   </div>
 
   <!-- 2-Column Calendar Layout -->
@@ -167,43 +167,6 @@
   </div>
 
 </div> <!-- .student-portal-shell -->
-
-<!-- Faculty Compensatory Class Modal -->
-<div class="modal-overlay" id="compensatoryModalOverlay">
-  <div class="modal-card">
-    <div class="modal-header">
-      <div>
-        <h3>Schedule Compensatory Class</h3>
-        <p class="modal-sub">Faculty option to schedule a compensatory lecture on working/adjusted days</p>
-      </div>
-      <button class="modal-close" id="closeCompensatoryModal" type="button" onclick="closeCompensatoryModal()">&times;</button>
-    </div>
-    <form id="compensatoryClassForm" onsubmit="handleCompensatoryFormSubmit(event)">
-      <div class="modal-body">
-        <div class="modal-field">
-          <label for="compDate">Selected Date</label>
-          <input type="date" id="compDate" required>
-        </div>
-        <div class="modal-field">
-          <label for="compSubject">Subject & Course</label>
-          <input type="text" id="compSubject" placeholder="e.g. Data Structures & Algorithms" required>
-        </div>
-        <div class="modal-field">
-          <label for="compTime">Timing & Room</label>
-          <input type="text" id="compTime" placeholder="e.g. 09:00 AM - 11:00 AM | Lecture Hall 2" required>
-        </div>
-        <div class="modal-field">
-          <label for="compReason">Compensation Reason</label>
-          <input type="text" id="compReason" placeholder="e.g. Compensating for gazetted holiday lecture" required>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-secondary" id="cancelCompensatoryModal" onclick="closeCompensatoryModal()">Cancel</button>
-        <button type="submit" class="btn-primary">Save Compensatory Session</button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <script src="script.js"></script>
 </body>
