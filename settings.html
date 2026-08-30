@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -30,6 +30,10 @@
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
         Dashboard
       </a>
+      <a href="calendar.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Academic Calendar
+      </a>
       <a href="students.html" class="nav-item">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
         Students
@@ -37,6 +41,10 @@
       <a href="attendance.html" class="nav-item">
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
         Attendance
+      </a>
+      <a href="notices.html" class="nav-item">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Notices & Discussions
       </a>
       <a href="reports.html" class="nav-item">
         <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
@@ -65,13 +73,45 @@
 
     <header class="content-header">
       <div>
-        <h2>System Settings & Preferences</h2>
-        <p class="welcome-line">Configure academic thresholds, notifications, and institution details</p>
+        <h2>System Settings & Policies</h2>
+        <p class="welcome-line">Configure academic thresholds, leave rate-limiting quotas, and institution details</p>
       </div>
     </header>
 
-    <section class="panel" style="max-width: 680px;">
-      <form onsubmit="event.preventDefault(); alert('System Settings Saved Successfully!');">
+    <!-- Faculty / Admin Leave Quota Policy Section -->
+    <section class="panel" style="max-width: 780px; margin-bottom: 24px; border-left: 4px solid var(--blue-600);">
+      <div class="panel-title-row">
+        <div>
+          <h3>Academic Leave Rate-Limiting Policy (Faculty & Admin Control)</h3>
+          <p class="section-sub">Set maximum allowed leave application quota per student across weekly, monthly, and yearly intervals</p>
+        </div>
+      </div>
+
+      <form id="leavePolicyForm" onsubmit="handleSaveLeavePolicy(event)">
+        <div class="policy-grid">
+          <div class="modal-field">
+            <label for="policyWeeklyLimit">Max Leaves / Week</label>
+            <input type="number" id="policyWeeklyLimit" value="2" min="1" max="7" class="modal-select" required>
+          </div>
+          <div class="modal-field">
+            <label for="policyMonthlyLimit">Max Leaves / Month</label>
+            <input type="number" id="policyMonthlyLimit" value="4" min="1" max="30" class="modal-select" required>
+          </div>
+          <div class="modal-field">
+            <label for="policyYearlyLimit">Max Leaves / Academic Year</label>
+            <input type="number" id="policyYearlyLimit" value="15" min="1" max="100" class="modal-select" required>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <button type="submit" class="btn-primary-action">Update Leave Quota Policy</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- General Preferences Panel -->
+    <section class="panel" style="max-width: 780px;">
+      <form onsubmit="event.preventDefault(); alert('General System Preferences Saved Successfully!');">
         <div class="modal-body" style="gap: 18px;">
           <div class="modal-field">
             <label for="minAttendanceThreshold">Minimum Attendance Exam Eligibility Threshold (%)</label>
@@ -99,7 +139,7 @@
         </div>
 
         <div style="margin-top: 24px;">
-          <button type="submit" class="btn-primary-action">Save System Preferences</button>
+          <button type="submit" class="btn-primary-action" style="background: var(--ink-800);">Save General Preferences</button>
         </div>
       </form>
     </section>
@@ -109,5 +149,26 @@
 </div>
 
 <script src="script.js"></script>
+<script>
+  // Load current leave policy into settings inputs
+  document.addEventListener('DOMContentLoaded', () => {
+    const policy = getLeavePolicy();
+    const w = document.getElementById('policyWeeklyLimit');
+    const m = document.getElementById('policyMonthlyLimit');
+    const y = document.getElementById('policyYearlyLimit');
+    if (w) w.value = policy.maxPerWeek || 2;
+    if (m) m.value = policy.maxPerMonth || 4;
+    if (y) y.value = policy.maxPerYear || 15;
+  });
+
+  function handleSaveLeavePolicy(e) {
+    e.preventDefault();
+    const w = parseInt(document.getElementById('policyWeeklyLimit').value, 10) || 2;
+    const m = parseInt(document.getElementById('policyMonthlyLimit').value, 10) || 4;
+    const y = parseInt(document.getElementById('policyYearlyLimit').value, 10) || 15;
+    saveLeavePolicy({ maxPerWeek: w, maxPerMonth: m, maxPerYear: y });
+    alert(`Leave Rate-Limiting Policy Updated!\n\nLimits configured:\n• Weekly: Max ${w} leaves\n• Monthly: Max ${m} leaves\n• Academic Year: Max ${y} leaves`);
+  }
+</script>
 </body>
 </html>

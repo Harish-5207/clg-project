@@ -743,6 +743,83 @@ function closeLeaveModal() {
 if (closeLeaveModalBtn) closeLeaveModalBtn.addEventListener('click', closeLeaveModal);
 if (cancelLeaveModalBtn) cancelLeaveModalBtn.addEventListener('click', closeLeaveModal);
 
+const defaultLeavePolicy = {
+  maxPerWeek: 2,
+  maxPerMonth: 4,
+  maxPerYear: 15
+};
+
+function getLeavePolicy() {
+  const stored = localStorage.getItem('Ad-Reg_leave_policy');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) {}
+  }
+  return defaultLeavePolicy;
+}
+
+function saveLeavePolicy(policy) {
+  localStorage.setItem('Ad-Reg_leave_policy', JSON.stringify(policy));
+}
+
+function validateLeaveApplicationQuota(list, targetDateStr) {
+  const policy = getLeavePolicy();
+  const targetDate = new Date(targetDateStr || Date.now());
+  const targetYear = targetDate.getFullYear();
+  const targetMonth = targetDate.getMonth();
+
+  // Calculate start of week (Sunday)
+  const targetWeekStart = new Date(targetDate);
+  targetWeekStart.setDate(targetDate.getDate() - targetDate.getDay());
+  targetWeekStart.setHours(0, 0, 0, 0);
+
+  const targetWeekEnd = new Date(targetWeekStart);
+  targetWeekEnd.setDate(targetWeekStart.getDate() + 6);
+  targetWeekEnd.setHours(23, 59, 59, 999);
+
+  let weekCount = 0;
+  let monthCount = 0;
+  let yearCount = 0;
+
+  list.forEach(item => {
+    const rawDate = item.dates ? item.dates.split(' to ')[0] : '';
+    const itemDate = new Date(rawDate);
+    if (!isNaN(itemDate.getTime())) {
+      if (itemDate >= targetWeekStart && itemDate <= targetWeekEnd) {
+        weekCount++;
+      }
+      if (itemDate.getFullYear() === targetYear && itemDate.getMonth() === targetMonth) {
+        monthCount++;
+      }
+      if (itemDate.getFullYear() === targetYear) {
+        yearCount++;
+      }
+    }
+  });
+
+  if (policy.maxPerWeek && weekCount >= policy.maxPerWeek) {
+    return {
+      allowed: false,
+      message: `Weekly limit reached: Maximum ${policy.maxPerWeek} leave applications permitted per week.`
+    };
+  }
+
+  if (policy.maxPerMonth && monthCount >= policy.maxPerMonth) {
+    return {
+      allowed: false,
+      message: `Monthly limit reached: Maximum ${policy.maxPerMonth} leave applications permitted per month.`
+    };
+  }
+
+  if (policy.maxPerYear && yearCount >= policy.maxPerYear) {
+    return {
+      allowed: false,
+      message: `Annual limit reached: Maximum ${policy.maxPerYear} leave applications permitted per academic year.`
+    };
+  }
+
+  return { allowed: true };
+}
+
 if (applyLeaveForm) {
   applyLeaveForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -754,6 +831,14 @@ if (applyLeaveForm) {
     if (!start || !reason) return;
 
     const list = getLeaveAppsData();
+
+    // Enforce Faculty / Super Admin Rate Limit Policy
+    const validation = validateLeaveApplicationQuota(list, start);
+    if (!validation.allowed) {
+      alert(`LEAVE APPLICATION RATE LIMIT POLICY\n\n${validation.message}\n\nAs per College Academic Regulations, faculty & super admin policy controls leave submission limits. Please consult your Department Head for emergency clearance.`);
+      return;
+    }
+
     const newApp = {
       id: 'L-' + Math.floor(1000 + Math.random() * 9000),
       type,
@@ -1523,12 +1608,12 @@ function getStudentAttendanceLogs() {
     try { return JSON.parse(stored); } catch(e) {}
   }
   return [
-    { id: 1, date: '06 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Dr. Rajesh Verma', topic: 'Graph Traversals (BFS & DFS)', status: 'Present' },
-    { id: 2, date: '05 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Prof. Anjali Mehta', topic: 'Express REST API Endpoints', status: 'Present' },
-    { id: 3, date: '04 May 2024, 10:00 AM', subject: 'Database Management Systems', subjectKey: 'dbms', faculty: 'Prof. S. Kulkarni', topic: 'Indexing and B-Trees', status: 'Present' },
-    { id: 4, date: '03 May 2024, 02:00 PM', subject: 'Computer Networks & Security', subjectKey: 'cn', faculty: 'Dr. K. Sharma', topic: 'TCP vs UDP Protocols', status: 'Present' },
-    { id: 5, date: '02 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Dr. Rajesh Verma', topic: 'AVL Tree Balancing & Rotations', status: 'Present' },
-    { id: 6, date: '01 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Prof. Anjali Mehta', topic: 'MongoDB Aggregations', status: 'Present' }
+    { id: 1, date: '06 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Department Head (HOD)', topic: 'Graph Traversals (BFS & DFS)', status: 'Present' },
+    { id: 2, date: '05 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Course Faculty In-Charge', topic: 'Express REST API Endpoints', status: 'Present' },
+    { id: 3, date: '04 May 2024, 10:00 AM', subject: 'Database Management Systems', subjectKey: 'dbms', faculty: 'Subject Professor', topic: 'Indexing and B-Trees', status: 'Present' },
+    { id: 4, date: '03 May 2024, 02:00 PM', subject: 'Computer Networks & Security', subjectKey: 'cn', faculty: 'Faculty In-Charge', topic: 'TCP vs UDP Protocols', status: 'Present' },
+    { id: 5, date: '02 May 2024, 09:00 AM', subject: 'Data Structures & Algorithms', subjectKey: 'dsa', faculty: 'Department Head (HOD)', topic: 'AVL Tree Balancing & Rotations', status: 'Present' },
+    { id: 6, date: '01 May 2024, 11:30 AM', subject: 'Web Development & Node.js', subjectKey: 'web', faculty: 'Course Faculty In-Charge', topic: 'MongoDB Aggregations', status: 'Present' }
   ];
 }
 
@@ -1995,7 +2080,7 @@ function renderAttendanceLeaderboard() {
 renderAttendanceLeaderboard();
 
 /* ==========================================================
-   INBUILT ACADEMIC CALENDAR INTERACTIVE ENGINE
+   INDIA REGIONAL ACADEMIC & GAZETTED HOLIDAY CALENDAR ENGINE
    ========================================================== */
 
 let calState = {
@@ -2005,6 +2090,42 @@ let calState = {
 };
 
 const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+const INDIA_ACADEMIC_HOLIDAYS = [
+  { month: 0, day: 26, title: "Republic Day", type: "national", typeLabel: "National Holiday", reason: "Government of India Gazetted National Celebration" },
+  { month: 2, day: 8, title: "Maha Shivratri", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious & Cultural Observance" },
+  { month: 2, day: 25, title: "Holi (Festival of Colours)", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Festival Holiday" },
+  { month: 2, day: 29, title: "Good Friday", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Government Holiday" },
+  { month: 3, day: 11, title: "Eid-ul-Fitr (Ramadan Eid)", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted National Religious Holiday" },
+  { month: 3, day: 21, title: "Mahavir Jayanti", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious & Cultural Holiday" },
+  { month: 4, day: 23, title: "Buddha Purnima", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Buddhist Observance" },
+  { month: 5, day: 17, title: "Bakrid / Eid al-Adha", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious Observance" },
+  { month: 6, day: 17, title: "Muharram", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious Holiday" },
+  { month: 7, day: 15, title: "Independence Day", type: "national", typeLabel: "National Holiday", reason: "77th Indian Independence Day Celebration" },
+  { month: 7, day: 19, title: "Raksha Bandhan", type: "institutional", typeLabel: "Institutional College Holiday", reason: "University Declared Cultural Festival Break" },
+  { month: 7, day: 26, title: "Janmashtami", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Krishna Janmashtami Celebration" },
+  { month: 8, day: 16, title: "Milad-un-Nabi (Eid-e-Milad)", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Religious Holiday" },
+  { month: 9, day: 2, title: "Mahatma Gandhi Jayanti", type: "national", typeLabel: "National Holiday", reason: "National Observance - Father of the Nation" },
+  { month: 9, day: 12, title: "Dussehra / Vijayadashami", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Festival Holiday" },
+  { month: 9, day: 31, title: "Diwali (Deepavali)", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Festival of Lights" },
+  { month: 10, day: 1, title: "Govardhan Puja / New Year", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Post-Diwali State Holiday" },
+  { month: 10, day: 15, title: "Guru Nanak Jayanti", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted Prakash Utsav Observance" },
+  { month: 11, day: 25, title: "Christmas Day", type: "gazetted", typeLabel: "Government Gazetted Holiday", reason: "Gazetted National Holiday" }
+];
+
+function getCompensatorySessions() {
+  const stored = localStorage.getItem('Ad-Reg_compensatory_sessions');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) {}
+  }
+  return [
+    { year: 2024, month: 4, day: 28, subject: "Data Structures & Algorithms", time: "09:00 AM - 11:00 AM | Lecture Hall 2", reason: "Compensatory lecture for gazetted holiday adjustments" }
+  ];
+}
+
+function saveCompensatorySessions(list) {
+  localStorage.setItem('Ad-Reg_compensatory_sessions', JSON.stringify(list));
+}
 
 function renderInbuiltCalendar() {
   const grid = document.getElementById('calendarDaysGrid');
@@ -2016,6 +2137,8 @@ function renderInbuiltCalendar() {
   const firstDay = new Date(calState.year, calState.month, 1).getDay();
   const totalDays = new Date(calState.year, calState.month + 1, 0).getDate();
   const prevMonthTotalDays = new Date(calState.year, calState.month, 0).getDate();
+
+  const compSessions = getCompensatorySessions();
 
   let html = '';
 
@@ -2036,11 +2159,22 @@ function renderInbuiltCalendar() {
     let badgeHtml = '';
     let extraClass = '';
 
-    if (calState.month === 4 && d === 15) {
-      badgeHtml = `<span class="cal-day-badge badge-holiday">Holiday</span>`;
+    // Check India Holiday
+    const holiday = INDIA_ACADEMIC_HOLIDAYS.find(h => h.month === calState.month && h.day === d);
+    // Check Compensatory Session
+    const comp = compSessions.find(c => c.year === calState.year && c.month === calState.month && c.day === d);
+
+    if (holiday) {
+      if (holiday.type === 'national') {
+        badgeHtml = `<span class="cal-day-badge badge-national">National</span>`;
+      } else if (holiday.type === 'institutional') {
+        badgeHtml = `<span class="cal-day-badge badge-inst">Campus</span>`;
+      } else {
+        badgeHtml = `<span class="cal-day-badge badge-gazetted">Gazetted</span>`;
+      }
       extraClass = 'holiday-day';
-    } else if (calState.month === 4 && d === 28) {
-      badgeHtml = `<span class="cal-day-badge badge-working">Working Day</span>`;
+    } else if (comp) {
+      badgeHtml = `<span class="cal-day-badge badge-compensatory">Working</span>`;
       extraClass = 'working-day';
     }
 
@@ -2101,20 +2235,32 @@ function renderSelectedDateEvents() {
   const dateStr = `${calState.selectedDay} ${MONTH_NAMES[calState.month]} ${calState.year}`;
   titleEl.textContent = `Schedule: ${dateStr}`;
 
-  if (calState.month === 4 && calState.selectedDay === 15) {
-    if (subtitleEl) subtitleEl.textContent = 'Official Academic Holiday';
+  const holiday = INDIA_ACADEMIC_HOLIDAYS.find(h => h.month === calState.month && h.day === calState.selectedDay);
+  const compSessions = getCompensatorySessions();
+  const comp = compSessions.find(c => c.year === calState.year && c.month === calState.month && c.day === calState.selectedDay);
+
+  if (holiday) {
+    if (subtitleEl) subtitleEl.textContent = holiday.typeLabel;
     container.innerHTML = `
-      <div class="result-card" style="border-left: 4px solid #d97706;">
-        <p class="result-term">Independence Memorial Holiday</p>
-        <p class="section-sub">All lectures and lab sessions suspended for the day.</p>
+      <div class="result-card" style="border-left: 4px solid #d97706; background: rgba(254, 243, 199, 0.4);">
+        <p class="result-term">${holiday.title}</p>
+        <div style="margin: 6px 0;">
+          <span class="holiday-type-tag ${holiday.type}">${holiday.typeLabel}</span>
+        </div>
+        <p class="section-sub" style="margin-top: 4px; color: var(--ink-700);"><strong>Official Reason:</strong> ${holiday.reason}</p>
+        <p class="section-sub" style="font-size: 11.5px; margin-top: 4px;">All academic lectures, tutorial labs, and institutional operations suspended.</p>
       </div>
     `;
-  } else if (calState.month === 4 && calState.selectedDay === 28) {
-    if (subtitleEl) subtitleEl.textContent = 'Admin Compensatory Class Day';
+  } else if (comp) {
+    if (subtitleEl) subtitleEl.textContent = 'Faculty Compensatory Class Session';
     container.innerHTML = `
-      <div class="result-card" style="border-left: 4px solid #16a34a;">
-        <p class="result-term">Compensatory Lecture Session</p>
-        <p class="section-sub">B.Tech CS 2nd Year — Data Structures & Algorithms (09:00 AM - 11:00 AM)</p>
+      <div class="result-card" style="border-left: 4px solid #16a34a; background: rgba(220, 252, 231, 0.4);">
+        <p class="result-term">${comp.subject}</p>
+        <div style="margin: 6px 0;">
+          <span class="holiday-type-tag compensatory">📚 Compensatory Session</span>
+        </div>
+        <p class="section-sub" style="color: var(--ink-700);"><strong>Timing & Room:</strong> ${comp.time}</p>
+        <p class="section-sub" style="margin-top: 4px;"><strong>Reason:</strong> ${comp.reason}</p>
       </div>
     `;
   } else {
@@ -2123,17 +2269,441 @@ function renderSelectedDateEvents() {
       <div class="result-card">
         <p class="result-term">Data Structures & Algorithms</p>
         <p class="section-sub">09:00 AM - 10:30 AM | Lab Room 402</p>
+        <span class="crumb-badge" style="font-size: 10.5px; margin-top: 4px;">Department Faculty In-Charge</span>
       </div>
       <div class="result-card">
         <p class="result-term">Database Management Systems</p>
-        <p class="section-sub">11:00 AM - 12:30 PM | LH-3</p>
+        <p class="section-sub">11:00 AM - 12:30 PM | Lecture Hall 3</p>
+        <span class="crumb-badge" style="font-size: 10.5px; margin-top: 4px;">Course Faculty</span>
       </div>
     `;
   }
 }
 
+function openCompensatoryModal() {
+  const modal = document.getElementById('compensatoryModalOverlay');
+  const dateInput = document.getElementById('compDate');
+  if (modal) {
+    modal.classList.add('active');
+    if (dateInput) {
+      const monthStr = String(calState.month + 1).padStart(2, '0');
+      const dayStr = String(calState.selectedDay).padStart(2, '0');
+      dateInput.value = `${calState.year}-${monthStr}-${dayStr}`;
+    }
+  }
+}
+
+function closeCompensatoryModal() {
+  const modal = document.getElementById('compensatoryModalOverlay');
+  if (modal) modal.classList.remove('active');
+}
+
+function handleCompensatoryFormSubmit(e) {
+  e.preventDefault();
+  const dateVal = document.getElementById('compDate').value;
+  const subject = document.getElementById('compSubject').value.trim();
+  const time = document.getElementById('compTime').value.trim();
+  const reason = document.getElementById('compReason').value.trim();
+
+  if (!dateVal || !subject) return;
+
+  const parts = dateVal.split('-');
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10) - 1;
+  const day = parseInt(parts[2], 10);
+
+  const list = getCompensatorySessions();
+  list.push({ year, month, day, subject, time, reason });
+  saveCompensatorySessions(list);
+
+  alert(`Compensatory Class Scheduled!\n\n${subject} scheduled on ${day} ${MONTH_NAMES[month]} ${year}.`);
+  closeCompensatoryModal();
+  renderInbuiltCalendar();
+}
+
 // Initial render for inbuilt calendar if on calendar.html
 renderInbuiltCalendar();
+
+
+/* ==========================================================
+   OFFICIAL NOTICES & DISCUSSION FORUM ENGINE (notices.html)
+   ========================================================== */
+
+const defaultAnnouncements = [
+  {
+    id: "N-101",
+    title: "Official Notification: Mid-Term Examination Schedule Released",
+    category: "exam",
+    categoryLabel: "Exam & Evaluation",
+    priority: "important",
+    author: "Controller of Examinations",
+    date: "06 May 2024",
+    content: "All FYJC and Degree students are hereby informed that Semester Mid-Term evaluations will commence from June 10, 2024. Official hall tickets and seating matrices will be distributed through the portal.",
+    pinned: true
+  },
+  {
+    id: "N-102",
+    title: "Gazetted Holiday Notice: Buddha Purnima Campus Closure",
+    category: "circular",
+    categoryLabel: "Official Circular",
+    priority: "general",
+    author: "Registrar / Academic Office",
+    date: "05 May 2024",
+    content: "In observance of Buddha Purnima, all undergraduate and postgraduate lectures, practical labs, and administrative operations will remain suspended on May 23, 2024.",
+    pinned: false
+  },
+  {
+    id: "N-103",
+    title: "Urgent: Verification of 75% Minimum Attendance Criteria",
+    category: "academic",
+    categoryLabel: "Academic Schedule",
+    priority: "urgent",
+    author: "Dean of Academic Affairs",
+    date: "03 May 2024",
+    content: "Students with attendance falling below the mandated 75% threshold are directed to submit genuine institutional leave applications to their respective Department Heads immediately.",
+    pinned: true
+  }
+];
+
+const defaultDiscussionThreads = [
+  {
+    id: "D-201",
+    topic: "Clarification on Data Structures Lab 4 (Binary Search Tree Traversal)",
+    author: "Student Council Academic Representative",
+    authorRole: "Student (Degree CS)",
+    date: "06 May 2024",
+    content: "Could the faculty please clarify whether AVL tree rotations are required in the submission for Lab 4 or only standard BST insertion/deletion?",
+    replies: [
+      {
+        id: "R-1",
+        author: "Department Head / Course Faculty",
+        authorRole: "Faculty In-Charge",
+        isFaculty: true,
+        date: "06 May 2024, 02:15 PM",
+        text: "Standard BST insertion and in-order traversal are compulsory for Lab 4. AVL balancing will be evaluated in Lab 5."
+      }
+    ]
+  },
+  {
+    id: "D-202",
+    topic: "Library Digital Resource Portal Access Timings",
+    author: "Student Portal Member",
+    authorRole: "Student",
+    date: "04 May 2024",
+    content: "Is remote off-campus access to the IEEE journal database active during gazetted holidays?",
+    replies: [
+      {
+        id: "R-2",
+        author: "Central Library & Information Cell",
+        authorRole: "Faculty / Administration",
+        isFaculty: true,
+        date: "04 May 2024, 05:30 PM",
+        text: "Yes, the institutional proxy allows 24/7 access with your student roll credentials even during public holidays."
+      }
+    ]
+  }
+];
+
+function getAnnouncementsList() {
+  const stored = localStorage.getItem('Ad-Reg_announcements');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) {}
+  }
+  return defaultAnnouncements;
+}
+
+function saveAnnouncementsList(list) {
+  localStorage.setItem('Ad-Reg_announcements', JSON.stringify(list));
+}
+
+function getDiscussionThreads() {
+  const stored = localStorage.getItem('Ad-Reg_discussions');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) {}
+  }
+  return defaultDiscussionThreads;
+}
+
+function saveDiscussionThreads(list) {
+  localStorage.setItem('Ad-Reg_discussions', JSON.stringify(list));
+}
+
+function switchNoticeTab(tab) {
+  const noticesTab = document.getElementById('noticesTabContent');
+  const discussionTab = document.getElementById('discussionTabContent');
+  const btnNotices = document.getElementById('tabNoticesBtn');
+  const btnDiscussion = document.getElementById('tabDiscussionBtn');
+
+  if (tab === 'notices') {
+    if (noticesTab) noticesTab.style.display = 'block';
+    if (discussionTab) discussionTab.style.display = 'none';
+    if (btnNotices) btnNotices.classList.add('active');
+    if (btnDiscussion) btnDiscussion.classList.remove('active');
+  } else {
+    if (noticesTab) noticesTab.style.display = 'none';
+    if (discussionTab) discussionTab.style.display = 'block';
+    if (btnNotices) btnNotices.classList.remove('active');
+    if (btnDiscussion) btnDiscussion.classList.add('active');
+    renderDiscussionThreads();
+  }
+}
+
+function renderAnnouncementsFeed() {
+  const container = document.getElementById('noticeFeedContainer');
+  if (!container) return;
+
+  const searchInput = document.getElementById('noticeSearchInput');
+  const catFilter = document.getElementById('noticeCategoryFilter');
+  const prioFilter = document.getElementById('noticePriorityFilter');
+
+  const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+  const selCat = catFilter ? catFilter.value : 'all';
+  const selPrio = prioFilter ? prioFilter.value : 'all';
+
+  const list = getAnnouncementsList();
+
+  const countBadge = document.getElementById('noticesCountBadge');
+  if (countBadge) countBadge.textContent = list.length;
+
+  const filtered = list.filter(n => {
+    const matchesQuery = !query ||
+      n.title.toLowerCase().includes(query) ||
+      n.content.toLowerCase().includes(query) ||
+      n.author.toLowerCase().includes(query);
+
+    const matchesCat = selCat === 'all' || n.category === selCat;
+    const matchesPrio = selPrio === 'all' || n.priority === selPrio;
+
+    return matchesQuery && matchesCat && matchesPrio;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: var(--ink-500); background: rgba(255,255,255,0.7); border-radius: var(--radius-md); border: 1px dashed var(--border);">
+        <p style="font-weight: 600;">No notices found matching your filter criteria.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(n => {
+    let prioClass = 'general';
+    let prioLabel = 'General Notice';
+    if (n.priority === 'urgent') {
+      prioClass = 'urgent';
+      prioLabel = 'Urgent Notice';
+    } else if (n.priority === 'important') {
+      prioClass = 'important';
+      prioLabel = 'Important Notice';
+    }
+
+    return `
+      <div class="notice-card ${prioClass}">
+        <div class="notice-header">
+          <div class="notice-title-row">
+            <h3 class="notice-title">${n.title}</h3>
+            <span class="notice-badge priority-${n.priority}">${prioLabel}</span>
+          </div>
+          <span class="crumb-badge" style="font-size: 11px;">${n.categoryLabel || n.category}</span>
+        </div>
+        <div class="notice-meta">
+          <span><strong>Issued by:</strong> ${n.author}</span>
+          <span>•</span>
+          <span>📅 ${n.date}</span>
+        </div>
+        <div class="notice-body">
+          ${n.content}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderDiscussionThreads() {
+  const container = document.getElementById('discussionFeedContainer');
+  if (!container) return;
+
+  const threads = getDiscussionThreads();
+
+  const discBadge = document.getElementById('discussionCountBadge');
+  if (discBadge) discBadge.textContent = threads.length;
+
+  if (threads.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: var(--ink-500); background: rgba(255,255,255,0.7); border-radius: var(--radius-md); border: 1px dashed var(--border);">
+        <p style="font-weight: 600;">No discussion threads yet. Click "+ Start Discussion" to ask a question.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = threads.map(t => {
+    const repliesHtml = t.replies.map(r => `
+      <div class="reply-item">
+        <div class="reply-author">
+          <span>${r.author}</span>
+          ${r.isFaculty ? '<span class="discussion-faculty-badge">Verified Faculty Response</span>' : ''}
+          <span style="font-size: 11px; font-weight: 400; color: var(--ink-500); margin-left: auto;">${r.date}</span>
+        </div>
+        <div class="reply-text">${r.text}</div>
+      </div>
+    `).join('');
+
+    return `
+      <div class="discussion-card">
+        <div class="discussion-header">
+          <div class="discussion-author">
+            <div class="avatar-circle" style="width: 36px; height: 36px; font-size: 13px;">${t.author.substring(0, 2).toUpperCase()}</div>
+            <div>
+              <div class="discussion-author-name">${t.author}</div>
+              <div class="discussion-author-role">${t.authorRole} • ${t.date}</div>
+            </div>
+          </div>
+        </div>
+        <h3 style="font-size: 16px; font-weight: 700; color: var(--ink-900); margin-bottom: 8px;">${t.topic}</h3>
+        <p style="font-size: 13.5px; color: var(--ink-700); line-height: 1.5; margin-bottom: 14px;">${t.content}</p>
+
+        <!-- Replies Section -->
+        <div class="discussion-replies-list">
+          ${repliesHtml}
+        </div>
+
+        <!-- Add Reply Form -->
+        <div style="margin-top: 14px; display: flex; gap: 8px;">
+          <input type="text" id="replyInput_${t.id}" placeholder="Write a response or query clarification..." class="select-pill" style="flex: 1; border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px;">
+          <button class="btn-primary-action" style="padding: 6px 14px; font-size: 12.5px;" onclick="addDiscussionReply('${t.id}')">Reply</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openPostNoticeModal() {
+  const m = document.getElementById('postNoticeModalOverlay');
+  if (m) m.classList.add('active');
+}
+
+function closePostNoticeModal() {
+  const m = document.getElementById('postNoticeModalOverlay');
+  if (m) m.classList.remove('active');
+}
+
+function handlePostNoticeSubmit(e) {
+  e.preventDefault();
+  const title = document.getElementById('noticeTitleInput').value.trim();
+  const cat = document.getElementById('noticeCategorySelect').value;
+  const prio = document.getElementById('noticePrioritySelect').value;
+  const content = document.getElementById('noticeContentInput').value.trim();
+
+  if (!title || !content) return;
+
+  const catLabels = {
+    circular: "Official Circular",
+    exam: "Exam & Evaluation",
+    academic: "Academic Schedule",
+    event: "Campus Event"
+  };
+
+  const list = getAnnouncementsList();
+  const now = new Date();
+  const dateStr = `${now.getDate()} ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+
+  const newNotice = {
+    id: 'N-' + Math.floor(100 + Math.random() * 900),
+    title,
+    category: cat,
+    categoryLabel: catLabels[cat] || "Notice",
+    priority: prio,
+    author: "Faculty Administration",
+    date: dateStr,
+    content,
+    pinned: prio === 'urgent'
+  };
+
+  list.unshift(newNotice);
+  saveAnnouncementsList(list);
+
+  alert(`Announcement Published Successfully!\n\n"${title}" has been broadcast to the college portal.`);
+  closePostNoticeModal();
+  document.getElementById('postNoticeForm').reset();
+  renderAnnouncementsFeed();
+}
+
+function openStartDiscussionModal() {
+  const m = document.getElementById('startDiscussionModalOverlay');
+  if (m) m.classList.add('active');
+}
+
+function closeStartDiscussionModal() {
+  const m = document.getElementById('startDiscussionModalOverlay');
+  if (m) m.classList.remove('active');
+}
+
+function handleStartDiscussionSubmit(e) {
+  e.preventDefault();
+  const topic = document.getElementById('discTopicInput').value.trim();
+  const content = document.getElementById('discContentInput').value.trim();
+
+  if (!topic || !content) return;
+
+  const threads = getDiscussionThreads();
+  const now = new Date();
+  const dateStr = `${now.getDate()} ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+
+  const newThread = {
+    id: 'D-' + Math.floor(200 + Math.random() * 800),
+    topic,
+    author: "Student Member",
+    authorRole: "Verified Student",
+    date: dateStr,
+    content,
+    replies: []
+  };
+
+  threads.unshift(newThread);
+  saveDiscussionThreads(threads);
+
+  alert(`Discussion Topic Created!\n\nYour topic "${topic}" is now open for faculty and student responses.`);
+  closeStartDiscussionModal();
+  document.getElementById('startDiscussionForm').reset();
+  renderDiscussionThreads();
+}
+
+function addDiscussionReply(threadId) {
+  const input = document.getElementById(`replyInput_${threadId}`);
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+
+  const threads = getDiscussionThreads();
+  const thread = threads.find(t => t.id === threadId);
+  if (thread) {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const dateStr = `${now.getDate()} ${MONTH_NAMES[now.getMonth()]}, ${timeStr}`;
+
+    thread.replies.push({
+      id: 'R-' + Math.floor(100 + Math.random() * 900),
+      author: "Verified User / Faculty",
+      authorRole: "Academic Member",
+      isFaculty: true,
+      date: dateStr,
+      text
+    });
+
+    saveDiscussionThreads(threads);
+    renderDiscussionThreads();
+  }
+}
+
+const noticeSearchInput = document.getElementById('noticeSearchInput');
+if (noticeSearchInput) {
+  noticeSearchInput.addEventListener('input', renderAnnouncementsFeed);
+}
+
+// Initial Notice & Discussion Render
+renderAnnouncementsFeed();
+renderDiscussionThreads();
 
 
 
